@@ -3,18 +3,19 @@
     "info": {
         "description": "This is a API docs for MyGO project.",
         "title": "MyGO!!!!! API docs",
-        "contact": {},
+        "contact": {
+            "name": "KoriSama",
+            "url": "https://kori-sama.github.io/",
+            "email": "Miyohashikori457@gmail.com"
+        },
         "version": "0.1"
     },
     "host": "localhost:8888",
     "basePath": "/api",
     "paths": {
-        "/api/blockchain/createWallet": {
+        "/api/blockchain/createWallet/{username}/{passphrase}": {
             "post": {
                 "description": "create wallet in blockchain",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -27,14 +28,14 @@
                         "type": "string",
                         "description": "username",
                         "name": "username",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "passphrase",
                         "name": "passphrase",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],

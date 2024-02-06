@@ -12,11 +12,16 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title           MyGO!!!!! API docs
-// @version         0.1
-// @description     This is a API docs for MyGO project.
-// @host      localhost:8888
-// @BasePath  /api
+//	@title			MyGO!!!!! API docs
+//	@version		0.1
+//	@description	This is a API docs for MyGO project.
+
+//	@contact.name	KoriSama
+//	@contact.url	https://kori-sama.github.io/
+//	@contact.email	Miyohashikori457@gmail.com
+
+//	@host		localhost:8888
+//	@BasePath	/api
 func main() {
 	config.InitLog()
 	config.InitConfig()
@@ -32,7 +37,7 @@ func main() {
 		})
 	})
 
-	app.POST("/api/blockchain/createWallet", controller.CreateWallet)
+	app.POST("/api/blockchain/createWallet/:username/:passphrase", controller.CreateWallet)
 
 	// app.POST("/api/blockchain/transfer", controller.Transfer)
 

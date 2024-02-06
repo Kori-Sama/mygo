@@ -9,18 +9,19 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "contact": {
+            "name": "KoriSama",
+            "url": "https://kori-sama.github.io/",
+            "email": "Miyohashikori457@gmail.com"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/blockchain/createWallet": {
+        "/api/blockchain/createWallet/{username}/{passphrase}": {
             "post": {
                 "description": "create wallet in blockchain",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
@@ -33,14 +34,14 @@ const docTemplate = `{
                         "type": "string",
                         "description": "username",
                         "name": "username",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     },
                     {
                         "type": "string",
                         "description": "passphrase",
                         "name": "passphrase",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],

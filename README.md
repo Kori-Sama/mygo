@@ -23,3 +23,7 @@ maybe you can run this project, but I'm not sure🧐
 ```shell
 swag init -g cmd/main.go -o docs
 ```
+
+run the project and open http://127.0.0.1:8888/swagger/index.html
+and then you can see the swagger docs page
+
