@@ -1,0 +1,41 @@
+basePath: /api
+host: localhost:8888
+info:
+  contact: {}
+  description: This is a API docs for MyGO project.
+  title: MyGO!!!!! API docs
+  version: "0.1"
+paths:
+  /api/blockchain/createWallet:
+    post:
+      consumes:
+      - application/json
+      description: create wallet in blockchain
+      parameters:
+      - description: username
+        in: query
+        name: username
+        required: true
+        type: string
+      - description: passphrase
+        in: query
+        name: passphrase
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: create wallet
+      tags:
+      - blockchain
+swagger: "2.0"

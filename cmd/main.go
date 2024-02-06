@@ -5,9 +5,18 @@ import (
 	"mygo/internal/controller"
 	"mygo/internal/model"
 
+	_ "mygo/docs"
+
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title           MyGO!!!!! API docs
+// @version         0.1
+// @description     This is a API docs for MyGO project.
+// @host      localhost:8888
+// @BasePath  /api
 func main() {
 	config.InitLog()
 	config.InitConfig()
@@ -26,6 +35,8 @@ func main() {
 	app.POST("/api/blockchain/createWallet", controller.CreateWallet)
 
 	// app.POST("/api/blockchain/transfer", controller.Transfer)
+
+	app.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	app.Run(config.Server.Host + ":" + config.Server.Port)
 }

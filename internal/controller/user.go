@@ -11,8 +11,8 @@ func Login(ctx *gin.Context) {
 	username := ctx.PostForm("username")
 	password := ctx.PostForm("password")
 	if err := service.Login(username, password); err != nil {
-		ctx.JSON(http.StatusBadRequest, Bad(err.Error()))
+		ctx.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	ctx.JSON(200, Ok(nil))
+	ctx.JSON(200, nil)
 }
