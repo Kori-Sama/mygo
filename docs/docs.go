@@ -71,7 +71,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "0.1",
 	Host:             "localhost:8888",
-	BasePath:         "/api",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "MyGO!!!!! API docs",
 	Description:      "This is a API docs for MyGO project.",

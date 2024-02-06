@@ -1,4 +1,3 @@
-basePath: /api
 host: localhost:8888
 info:
   contact:

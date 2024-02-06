@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -48,6 +49,14 @@ func InitLog() {
 		}
 	}
 	log.SetOutput(f)
+
+	// f, err = os.OpenFile("log/http.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	// if err != nil {
+	// 	if f, err = os.Create("log/http.log"); err != nil {
+	// 		log.Fatalf("Failed to create log file: %v", err)
+	// 	}
+	// }
+	// return io.MultiWriter(gin.DefaultWriter, f)
 }
 
 func InitConfig() {
@@ -65,4 +74,15 @@ func InitConfig() {
 	Server = config.Server
 	Database = config.Database
 	Blockchain = config.Blockchain
+
+	fmt.Println(logo)
 }
+
+var logo = `
+  __  ____     _______  ____    _   _   _   _   _ 
+ |  \/  \ \   / / ____|/ __ \  | | | | | | | | | |
+ | \  / |\ \_/ / |  __| |  | | | | | | | | | | | |
+ | |\/| | \   /| | |_ | |  | | | | | | | | | | | |
+ | |  | |  | | | |__| | |__| | |_| |_| |_| |_| |_|
+ |_|  |_|  |_|  \_____|\____/  (_) (_) (_) (_) (_)
+`

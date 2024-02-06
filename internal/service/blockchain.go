@@ -1,26 +1,26 @@
 package service
 
 import (
-	"errors"
 	"mygo/internal/blockchain"
 	"mygo/internal/model"
+	utils "mygo/internal/pkg"
 )
 
 func CreateWallet(username, passphrase string) error {
-	if passphrase == "" {
-		return errors.New("passphrase cannot be empty")
+	if username == "" || passphrase == "" {
+		return utils.ErrorEmpty
 	}
 	user, err := model.GetUserByName(username)
 	if err != nil {
-		return ErrorUnknownUsername
+		return err
 	}
 
 	wallet, err := blockchain.NewAccount(passphrase)
 	if err != nil {
-		return ErrorCreateWallet
+		return utils.ErrorCreateWallet
 	}
 	if err = user.UpdateWallet(wallet); err != nil {
-		return ErrorOperateDatabase
+		return utils.ErrorOperateDatabase
 	}
 
 	return nil

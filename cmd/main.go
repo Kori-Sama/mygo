@@ -3,6 +3,7 @@ package main
 import (
 	"mygo/config"
 	"mygo/internal/controller"
+	"mygo/internal/middlewares"
 	"mygo/internal/model"
 
 	_ "mygo/docs"
@@ -20,8 +21,7 @@ import (
 //	@contact.url	https://kori-sama.github.io/
 //	@contact.email	Miyohashikori457@gmail.com
 
-//	@host		localhost:8888
-//	@BasePath	/api
+// @host	localhost:8888
 func main() {
 	config.InitLog()
 	config.InitConfig()
@@ -30,18 +30,16 @@ func main() {
 	model.SyncTables()
 
 	app := gin.Default()
+	app.Use(middlewares.Cors())
 
-	app.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "Hello World",
-		})
-	})
-
-	app.POST("/api/blockchain/createWallet/:username/:passphrase", controller.CreateWallet)
+	bcGroup := app.Group("/api/blockchain")
+	{
+		bcGroup.POST("/createWallet/:username/:passphrase", controller.CreateWallet)
+	}
 
 	// app.POST("/api/blockchain/transfer", controller.Transfer)
 
-	app.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	app.Run(config.Server.Host + ":" + config.Server.Port)
 }
