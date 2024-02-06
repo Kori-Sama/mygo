@@ -1,7 +1,6 @@
 package controller
 
 import (
-	result "mygo/internal/pkg"
 	"mygo/internal/service"
 	"net/http"
 
@@ -12,11 +11,11 @@ func CreateWallet(ctx *gin.Context) {
 	username := ctx.Query("username")
 	passphrase := ctx.Query("passphrase")
 	if err := service.CreateWallet(username, passphrase); err != nil {
-		ctx.JSON(http.StatusBadRequest, result.Error(400, err.Error()))
+		ctx.JSON(http.StatusBadRequest, Bad(err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, result.Ok(nil))
+	ctx.JSON(http.StatusOK, Ok(nil))
 }
 
 // func Transfer(ctx *gin.Context) {

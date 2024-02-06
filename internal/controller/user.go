@@ -1,7 +1,6 @@
 package controller
 
 import (
-	result "mygo/internal/pkg"
 	"mygo/internal/service"
 	"net/http"
 
@@ -12,8 +11,8 @@ func Login(ctx *gin.Context) {
 	username := ctx.PostForm("username")
 	password := ctx.PostForm("password")
 	if err := service.Login(username, password); err != nil {
-		ctx.JSON(http.StatusBadRequest, result.Error(400, err.Error()))
+		ctx.JSON(http.StatusBadRequest, Bad(err.Error()))
 		return
 	}
-	ctx.JSON(200, result.Ok(nil))
+	ctx.JSON(200, Ok(nil))
 }
