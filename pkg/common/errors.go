@@ -6,16 +6,12 @@ var (
 	ErrorEmpty            = errors.New("username and password cannot be empty")
 	ErrorUnknownUsername  = errors.New("unknown username")
 	ErrorWrongPassword    = errors.New("wrong password")
+	ErrorNoWallet         = errors.New("user do not have wallet")
 	ErrorBalanceNotEnough = errors.New("balance is not enough")
 	// internal errors
 	ErrorOperateDatabase      = errors.New("failed to operate database")
-	ErrorNoWallet             = errors.New("user do not have wallet")
 	ErrorBlockchainDisconnect = errors.New("blockchain is disconnected")
 	ErrorTokenContract        = errors.New("failed to get token contract")
-	// ErrorTransfer             = errors.New("failed to transfer")
-	// ErrorGetBalance           = errors.New("failed to get balance")
-	// ErrorGetDecimals          = errors.New("failed to get decimals")
-	// ErrorCreateWallet         = errors.New("failed to create wallet")
 )
 
 var internalErrors = []error{

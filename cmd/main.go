@@ -29,19 +29,18 @@ func main() {
 	model.InitEngine()
 	model.SyncTables()
 
+	gin.SetMode(config.Server.Mode)
 	app := gin.Default()
 	app.Use(middlewares.Cors())
 
-	bcGroup := app.Group("/api/blockchain")
+	bc := app.Group("/api/blockchain")
 	{
-		bcGroup.POST("/createWallet/:username/:passphrase", controller.CreateWallet)
-		bcGroup.GET("/getBalance/:username", controller.GetBalance)
-		bcGroup.POST("/transfer", controller.Transfer)
+		bc.POST("/createWallet/:username/:passphrase", controller.CreateWallet)
+		bc.GET("/getBalance/:username", controller.GetBalance)
+		bc.POST("/transfer", controller.Transfer)
 	}
-
-	// app.POST("/api/blockchain/transfer", controller.Transfer)
 
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	app.Run(config.Server.Host + ":" + config.Server.Port)
+	app.Run(":" + config.Server.Port)
 }
