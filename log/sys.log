@@ -8,3 +8,4 @@ MyGO: 2024/02/07 02:19:05 Failed to sync database: dial tcp 127.0.0.1:3306: conn
 MyGO: 2024/02/07 02:19:21 Failed to sync database: dial tcp 127.0.0.1:3306: connect: connection refused
 MyGO: 2024/02/07 02:23:02 Failed to sync database: dial tcp 127.0.0.1:3306: connect: connection refused
 MyGO: 2024/02/07 02:25:14 Failed to sync database: dial tcp 127.0.0.1:3306: connect: connection refused
+MyGO: 2024/02/07 20:01:27 Transfer successful. Transaction hash: 0xc7a85f6f2846e2fa602d78a03078e58c2f5a91da4cd8ba52a6db6658ecf8f940

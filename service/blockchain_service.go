@@ -1,7 +1,6 @@
 package service
 
 import (
-	"math"
 	"math/big"
 	"mygo/blockchain"
 	"mygo/model"
@@ -22,38 +21,36 @@ func CreateWallet(username, passphrase string) error {
 		return err
 	}
 	if err = user.UpdateWallet(wallet); err != nil {
-		return common.ErrorOperateDatabase
+		return err
+	}
+	if err = user.UpdatePassphrase(passphrase); err != nil {
+		return err
 	}
 
 	return nil
 }
 
-func GetBalance(username string) (float64, error) {
-	decimal, err := blockchain.Decimal()
-	if err != nil {
-		return 0, err
-	}
-
+func GetBalance(username string) (string, error) {
 	if username == "" {
-		return 0, common.ErrorEmpty
+		return "", common.ErrorEmpty
 	}
 	user, err := model.GetUserByName(username)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 	if user.Wallet == "" {
-		return 0, common.ErrorNoWallet
+		return "", common.ErrorNoWallet
 	}
 	balance, err := blockchain.BalanceOf(user.Wallet)
 	if err != nil {
-		return 0, err
+		return "", err
 	}
 
-	return calcToken(balance, decimal), nil
+	return balance.String(), nil
 }
 
-func Transfer(username, passphrase, toName string, amount float64) error {
-	if username == "" || passphrase == "" || toName == "" || amount <= 0 {
+func Transfer(username, passphrase, toName string, amount string) error {
+	if username == "" || passphrase == "" || toName == "" || amount == "" {
 		return common.ErrorEmpty
 	}
 	user, err := model.GetUserByName(username)
@@ -68,31 +65,26 @@ func Transfer(username, passphrase, toName string, amount float64) error {
 		return common.ErrorNoWallet
 	}
 
-	decimal, err := blockchain.Decimal()
-	if err != nil {
-		return err
-	}
 	balance, err := blockchain.BalanceOf(user.Wallet)
 	if err != nil {
 		return err
 	}
+	amountBigInt, isValid := new(big.Int).SetString(amount, 10)
+	if !isValid {
+		return common.ErrorInvalidAmount
+	}
+	if amountBigInt.Cmp(big.NewInt(0)) == -1 || amountBigInt.Cmp(big.NewInt(0)) == 0 {
+		return common.ErrorInvalidAmount
+	}
 
-	if amount > calcToken(balance, decimal) {
+	if amountBigInt.Cmp(balance) == 1 {
 		return common.ErrorBalanceNotEnough
 	}
 
-	amountBigInt := new(big.Int).SetInt64(int64(math.Pow(amount, float64(decimal))))
 	err = blockchain.Transfer(user.Wallet, passphrase, to.Wallet, amountBigInt)
 	if err != nil {
 		return err
 	}
 
 	return nil
-}
-
-func calcToken(balance *big.Int, decimal uint8) float64 {
-	b := new(big.Float).SetInt(balance)
-	d := new(big.Float).SetInt(new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(decimal)), nil))
-	f, _ := new(big.Float).Quo(b, d).Float64()
-	return f
 }

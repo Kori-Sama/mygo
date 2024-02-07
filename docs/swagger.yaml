@@ -2,7 +2,7 @@ definitions:
   controller.TransferRequest:
     properties:
       amount:
-        type: number
+        type: string
       passphrase:
         type: string
       toName:
@@ -65,7 +65,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: number
+            type: string
         "400":
           description: Bad Request
           schema:

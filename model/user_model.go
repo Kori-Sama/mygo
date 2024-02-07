@@ -2,17 +2,15 @@ package model
 
 import (
 	"mygo/pkg/common"
-	"time"
 )
 
 type User struct {
-	Id       int64
-	Name     string
-	Age      int
-	Password string    `xorm:"varchar(200) notnull"`
-	Wallet   string    `xorm:"varchar(200)"`
-	Created  time.Time `xorm:"created"`
-	Updated  time.Time `xorm:"updated"`
+	Id         int64
+	Name       string
+	Age        int
+	Password   string `xorm:"varchar(200) notnull"`
+	Wallet     string `xorm:"varchar(200)"`
+	Passphrase string `xorm:"varchar(200)"`
 }
 
 func CreateUser(name, password string, age int) error {
@@ -61,6 +59,15 @@ func (u *User) UpdatePassword(password string) error {
 func (u *User) UpdateWallet(wallet string) error {
 	u.Wallet = wallet
 	_, err := engine.ID(u.Id).Cols("wallet").Update(u)
+	if err != nil {
+		return common.ErrorOperateDatabase
+	}
+	return nil
+}
+
+func (u *User) UpdatePassphrase(passphrase string) error {
+	u.Passphrase = passphrase
+	_, err := engine.ID(u.Id).Cols("passphrase").Update(u)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}

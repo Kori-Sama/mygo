@@ -80,7 +80,7 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "number"
+                            "type": "string"
                         }
                     },
                     "400": {
@@ -147,7 +147,7 @@
             "type": "object",
             "properties": {
                 "amount": {
-                    "type": "number"
+                    "type": "string"
                 },
                 "passphrase": {
                     "type": "string"

@@ -8,6 +8,7 @@ var (
 	ErrorWrongPassword    = errors.New("wrong password")
 	ErrorNoWallet         = errors.New("user do not have wallet")
 	ErrorBalanceNotEnough = errors.New("balance is not enough")
+	ErrorInvalidAmount    = errors.New("invalid amount")
 	// internal errors
 	ErrorOperateDatabase      = errors.New("failed to operate database")
 	ErrorBlockchainDisconnect = errors.New("blockchain is disconnected")

@@ -2,6 +2,7 @@ package blockchain
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"math/big"
 	"mygo/config"
@@ -33,7 +34,7 @@ func connectToChain() (*ethclient.Client, *big.Int, *Token, error) {
 	return conn, chainID, token, nil
 }
 
-func Transfer(fromAddress, toAddress, passphrase string, amount *big.Int) error {
+func Transfer(fromAddress, passphrase, toAddress string, amount *big.Int) error {
 	conn, chainID, token, err := connectToChain()
 	if err != nil {
 		return err
@@ -42,19 +43,19 @@ func Transfer(fromAddress, toAddress, passphrase string, amount *big.Int) error 
 	ks := keystore.NewKeyStore(config.Blockchain.KeystorePath, keystore.LightScryptN, keystore.LightScryptP)
 	fromAccount, err := ks.Find(accounts.Account{Address: common.HexToAddress(fromAddress)})
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to find account: %v", err)
 	}
 	err = ks.Unlock(fromAccount, passphrase)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to unlock account: %v", err)
 	}
 	auth, err := bind.NewKeyStoreTransactorWithChainID(ks, fromAccount, chainID)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create authorized transactor: %v", err)
 	}
 	tx, err := token.Transfer(auth, common.HexToAddress(toAddress), amount)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to send transaction: %v", err)
 	}
 	log.Printf("Transfer successful. Transaction hash: %s\n", tx.Hash().Hex())
 	return nil
@@ -64,7 +65,7 @@ func NewAccount(passphrase string) (string, error) {
 	ks := keystore.NewKeyStore(config.Blockchain.KeystorePath, keystore.LightScryptN, keystore.LightScryptP)
 	account, err := ks.NewAccount(passphrase)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to create account: %v", err)
 	}
 
 	return account.Address.Hex(), nil
@@ -83,22 +84,22 @@ func BalanceOf(address string) (*big.Int, error) {
 		Context:     nil,
 	}, common.HexToAddress(address))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to get balance: %v", err)
 	}
 	return res, nil
 }
 
-func Decimal() (uint8, error) {
+func Decimal() (*big.Int, error) {
 	conn, _, token, err := connectToChain()
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
 	defer conn.Close()
 	res, err := token.Decimals(nil)
 	if err != nil {
-		return 0, err
+		return nil, err
 	}
-	return res, nil
+	return new(big.Int).SetInt64(int64(res)), nil
 }
 
 // func DeployContract(conn *ethclient.Client) {
