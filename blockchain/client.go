@@ -22,22 +22,23 @@ func connectToChain() (*ethclient.Client, *big.Int, *Token, error) {
 
 	chainID, err := conn.ChainID(context.Background())
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, mycommon.ErrorBlockchainDisconnect
 	}
 
 	token, err := NewToken(common.HexToAddress(config.Blockchain.ContractAddress), conn)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, mycommon.ErrorTokenContract
 	}
 
 	return conn, chainID, token, nil
 }
 
 func Transfer(fromAddress, toAddress, passphrase string, amount *big.Int) error {
-	_, chainID, token, err := connectToChain()
+	conn, chainID, token, err := connectToChain()
 	if err != nil {
 		return err
 	}
+	defer conn.Close()
 	ks := keystore.NewKeyStore(config.Blockchain.KeystorePath, keystore.LightScryptN, keystore.LightScryptP)
 	fromAccount, err := ks.Find(accounts.Account{Address: common.HexToAddress(fromAddress)})
 	if err != nil {
@@ -55,7 +56,7 @@ func Transfer(fromAddress, toAddress, passphrase string, amount *big.Int) error 
 	if err != nil {
 		return err
 	}
-	log.Println(tx)
+	log.Printf("Transfer successful. Transaction hash: %s\n", tx.Hash().Hex())
 	return nil
 }
 
@@ -70,10 +71,11 @@ func NewAccount(passphrase string) (string, error) {
 }
 
 func BalanceOf(address string) (*big.Int, error) {
-	_, _, token, err := connectToChain()
+	conn, _, token, err := connectToChain()
 	if err != nil {
 		return nil, err
 	}
+	defer conn.Close()
 	res, err := token.BalanceOf(&bind.CallOpts{
 		Pending:     false,
 		From:        common.Address{},
@@ -87,10 +89,11 @@ func BalanceOf(address string) (*big.Int, error) {
 }
 
 func Decimal() (uint8, error) {
-	_, _, token, err := connectToChain()
+	conn, _, token, err := connectToChain()
 	if err != nil {
 		return 0, err
 	}
+	defer conn.Close()
 	res, err := token.Decimals(nil)
 	if err != nil {
 		return 0, err

@@ -9,22 +9,28 @@ var (
 	ErrorOperateDatabase      = errors.New("failed to operate database")
 	ErrorNoWallet             = errors.New("user do not have wallet")
 	ErrorBlockchainDisconnect = errors.New("blockchain is disconnected")
+	ErrorTokenContract        = errors.New("failed to get token contract")
 	// ErrorTransfer             = errors.New("failed to transfer")
 	// ErrorGetBalance           = errors.New("failed to get balance")
 	// ErrorGetDecimals          = errors.New("failed to get decimals")
 	// ErrorCreateWallet         = errors.New("failed to create wallet")
 )
 
+var internalErrors = []error{
+	ErrorOperateDatabase,
+	ErrorBlockchainDisconnect,
+	ErrorTokenContract,
+}
+
 func CheckInternalError(err error) bool {
 	if err == nil {
 		return false
 	}
 
-	if errors.Is(err, ErrorBlockchainDisconnect) {
-		return true
-	}
-	if errors.Is(err, ErrorOperateDatabase) {
-		return true
+	for _, e := range internalErrors {
+		if err == e {
+			return true
+		}
 	}
 
 	return false
