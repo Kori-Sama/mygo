@@ -56,6 +56,47 @@
                     }
                 }
             }
+        },
+        "/api/blockchain/getBalance/{username}": {
+            "get": {
+                "description": "get balance amount from wallet",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "blockchain"
+                ],
+                "summary": "get balance",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "username",
+                        "name": "username",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     }
 }

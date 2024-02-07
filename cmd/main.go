@@ -35,6 +35,7 @@ func main() {
 	bcGroup := app.Group("/api/blockchain")
 	{
 		bcGroup.POST("/createWallet/:username/:passphrase", controller.CreateWallet)
+		bcGroup.GET("/getBalance/:username", controller.GetBalance)
 	}
 
 	// app.POST("/api/blockchain/transfer", controller.Transfer)

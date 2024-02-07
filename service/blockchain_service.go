@@ -18,7 +18,7 @@ func CreateWallet(username, passphrase string) error {
 
 	wallet, err := blockchain.NewAccount(passphrase)
 	if err != nil {
-		return common.ErrorCreateWallet
+		return err
 	}
 	if err = user.UpdateWallet(wallet); err != nil {
 		return common.ErrorOperateDatabase
@@ -30,7 +30,7 @@ func CreateWallet(username, passphrase string) error {
 func GetBalance(username string) (float64, error) {
 	decimal, err := blockchain.Decimal()
 	if err != nil {
-		return 0, common.ErrorGetDecimals
+		return 0, err
 	}
 
 	if username == "" {
@@ -40,9 +40,12 @@ func GetBalance(username string) (float64, error) {
 	if err != nil {
 		return 0, err
 	}
+	if user.Wallet == "" {
+		return 0, common.ErrorNoWallet
+	}
 	balance, err := blockchain.BalanceOf(user.Wallet)
 	if err != nil {
-		return 0, common.ErrorGetBalance
+		return 0, err
 	}
 
 	return calcToken(balance, decimal), nil

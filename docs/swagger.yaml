@@ -38,4 +38,31 @@ paths:
       summary: create wallet
       tags:
       - blockchain
+  /api/blockchain/getBalance/{username}:
+    get:
+      description: get balance amount from wallet
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: number
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: get balance
+      tags:
+      - blockchain
 swagger: "2.0"

@@ -5,6 +5,7 @@ import (
 	"log"
 	"math/big"
 	"mygo/config"
+	mycommon "mygo/pkg/common"
 
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -16,7 +17,7 @@ import (
 func connectToChain() (*ethclient.Client, *big.Int, *Token, error) {
 	conn, err := ethclient.Dial(config.Blockchain.GethClient)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, nil, nil, mycommon.ErrorBlockchainDisconnect
 	}
 
 	chainID, err := conn.ChainID(context.Background())
