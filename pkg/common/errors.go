@@ -3,9 +3,11 @@ package common
 import "errors"
 
 var (
-	ErrorEmpty                = errors.New("username and password cannot be empty")
-	ErrorUnknownUsername      = errors.New("unknown username")
-	ErrorWrongPassword        = errors.New("wrong password")
+	ErrorEmpty            = errors.New("username and password cannot be empty")
+	ErrorUnknownUsername  = errors.New("unknown username")
+	ErrorWrongPassword    = errors.New("wrong password")
+	ErrorBalanceNotEnough = errors.New("balance is not enough")
+	// internal errors
 	ErrorOperateDatabase      = errors.New("failed to operate database")
 	ErrorNoWallet             = errors.New("user do not have wallet")
 	ErrorBlockchainDisconnect = errors.New("blockchain is disconnected")
