@@ -18,6 +18,11 @@ go run ./cmd
 
 maybe you can run this project, but I'm not sure🧐
 
+### Database
+
+You don't need to create tables, the orm will sync the tables automatically
+but you need to create a mysql database at least and it's name and port should be same with the yaml config
+
 ### Swagger
 
 ```shell
