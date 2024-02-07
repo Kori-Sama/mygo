@@ -19,5 +19,5 @@ blockchain:
 
 jwt:
   tokenExpire: 60
-  refreshExpire: 20
+  refreshExpire: 10
   secret: mygo

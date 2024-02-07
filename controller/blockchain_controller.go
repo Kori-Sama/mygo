@@ -2,8 +2,9 @@ package controller
 
 import (
 	"mygo/pkg/common"
+	"mygo/pkg/constants"
+	"mygo/pkg/utils"
 	"mygo/service"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,15 +12,19 @@ import (
 // @Summary		create wallet
 // @Description	create wallet in blockchain
 // @Tags			blockchain
-// @Param			username	path	string	true	"username"
 // @Param			passphrase	path	string	true	"passphrase"
 // @Produce		json
-// @Success		200			{object}	Result			"OK"
-// @Router			/api/blockchain/createWallet/{username}/{passphrase} [post]
+// @Success		200	{object}	common.Result	"OK"
+// @Router			/api/blockchain/createWallet/{passphrase} [post]
 func CreateWallet(ctx *gin.Context) {
-	username := ctx.Param("username")
 	passphrase := ctx.Param("passphrase")
-	if err := service.CreateWallet(username, passphrase); err != nil {
+	user := utils.GetValueFromContext[common.LoginUser](ctx, constants.LOGIN_USER)
+	if user == nil {
+		ctx.JSON(403, common.NoAuth())
+		return
+	}
+
+	if err := service.CreateWallet(user.Id, passphrase); err != nil {
 		common.SelectInternalError(ctx, err)
 		ctx.JSON(400, common.Bad(err.Error()))
 		return
@@ -31,13 +36,17 @@ func CreateWallet(ctx *gin.Context) {
 // @Summary		get balance
 // @Description	get balance amount from wallet
 // @Tags			blockchain
-// @Param			username	path	string	true	"username"
 // @Produce		json
-// @Success		200			{object}	Result			"OK"
-// @Router			/api/blockchain/getBalance/{username} [get]
+// @Success		200	{object}	common.Result	"OK"
+// @Router			/api/blockchain/getBalance [get]
 func GetBalance(ctx *gin.Context) {
-	username := ctx.Param("username")
-	balance, err := service.GetBalance(username)
+	user := utils.GetValueFromContext[common.LoginUser](ctx, constants.LOGIN_USER)
+	if user == nil {
+		ctx.JSON(403, common.NoAuth())
+		return
+	}
+
+	balance, err := service.GetBalance(user.Id)
 	if err != nil {
 		common.SelectInternalError(ctx, err)
 		ctx.JSON(400, common.Bad(err.Error()))
@@ -51,13 +60,13 @@ func GetBalance(ctx *gin.Context) {
 // @Tags			blockchain
 // @Accept			json
 // @Produce		json
-// @Param			transfer	body		TransferRequest	true	"transfer request json"
-// @Success		200			{object}	Result			"OK"
+// @Param			transfer	body		common.TransferRequest	true	"transfer request json"
+// @Success		200			{object}	common.Result	"OK"
 // @Router			/api/blockchain/transfer [post]
 func Transfer(ctx *gin.Context) {
-	var transferRequest TransferRequest
+	var transferRequest common.TransferRequest
 	if err := ctx.ShouldBindJSON(&transferRequest); err != nil {
-		ctx.JSON(http.StatusBadRequest, err.Error())
+		ctx.JSON(400, common.Bad(err.Error()))
 		return
 	}
 
@@ -68,11 +77,4 @@ func Transfer(ctx *gin.Context) {
 	}
 
 	ctx.JSON(200, common.Ok(nil))
-}
-
-type TransferRequest struct {
-	Username   string `json:"username"`
-	Passphrase string `json:"passphrase"`
-	ToName     string `json:"toName"`
-	Amount     string `json:"amount"`
 }

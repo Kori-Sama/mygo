@@ -5,21 +5,19 @@ import (
 	"mygo/pkg/common"
 )
 
-func Login(username string, password string) error {
+func Login(username string, password string) (int, error) {
 	if username == "" || password == "" {
-		return common.ErrorEmpty
+		return 0, common.ErrorEmpty
 	}
 
 	user, err := model.GetUserByName(username)
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	if user.Password != password {
-		return common.ErrorWrongPassword
+		return 0, common.ErrorWrongPassword
 	}
-	if err = user.UpdateToken(); err != nil {
-		return err
-	}
-	return nil
+
+	return user.Id, nil
 }

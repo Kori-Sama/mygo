@@ -1,5 +1,12 @@
 definitions:
-  controller.Result:
+  common.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  common.Result:
     properties:
       code:
         type: integer
@@ -7,7 +14,7 @@ definitions:
       msg:
         type: string
     type: object
-  controller.TransferRequest:
+  common.TransferRequest:
     properties:
       amount:
         type: string
@@ -28,15 +35,10 @@ info:
   title: MyGO!!!!! API docs
   version: "0.1"
 paths:
-  /api/blockchain/createWallet/{username}/{passphrase}:
+  /api/blockchain/createWallet/{passphrase}:
     post:
       description: create wallet in blockchain
       parameters:
-      - description: username
-        in: path
-        name: username
-        required: true
-        type: string
       - description: passphrase
         in: path
         name: passphrase
@@ -48,26 +50,20 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.Result'
+            $ref: '#/definitions/common.Result'
       summary: create wallet
       tags:
       - blockchain
-  /api/blockchain/getBalance/{username}:
+  /api/blockchain/getBalance:
     get:
       description: get balance amount from wallet
-      parameters:
-      - description: username
-        in: path
-        name: username
-        required: true
-        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.Result'
+            $ref: '#/definitions/common.Result'
       summary: get balance
       tags:
       - blockchain
@@ -82,15 +78,37 @@ paths:
         name: transfer
         required: true
         schema:
-          $ref: '#/definitions/controller.TransferRequest'
+          $ref: '#/definitions/common.TransferRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/controller.Result'
+            $ref: '#/definitions/common.Result'
       summary: transfer funds
       tags:
       - blockchain
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      description: login
+      parameters:
+      - description: login request
+        in: body
+        name: loginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/common.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Result'
+      summary: login
+      tags:
+      - user
 swagger: "2.0"

@@ -19,7 +19,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/blockchain/createWallet/{username}/{passphrase}": {
+        "/api/blockchain/createWallet/{passphrase}": {
             "post": {
                 "description": "create wallet in blockchain",
                 "produces": [
@@ -32,13 +32,6 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "username",
-                        "name": "username",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
                         "description": "passphrase",
                         "name": "passphrase",
                         "in": "path",
@@ -49,13 +42,13 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.Result"
+                            "$ref": "#/definitions/common.Result"
                         }
                     }
                 }
             }
         },
-        "/api/blockchain/getBalance/{username}": {
+        "/api/blockchain/getBalance": {
             "get": {
                 "description": "get balance amount from wallet",
                 "produces": [
@@ -65,20 +58,11 @@ const docTemplate = `{
                     "blockchain"
                 ],
                 "summary": "get balance",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "username",
-                        "name": "username",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.Result"
+                            "$ref": "#/definitions/common.Result"
                         }
                     }
                 }
@@ -104,7 +88,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.TransferRequest"
+                            "$ref": "#/definitions/common.TransferRequest"
                         }
                     }
                 ],
@@ -112,7 +96,41 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.Result"
+                            "$ref": "#/definitions/common.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "description": "login",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "login",
+                "parameters": [
+                    {
+                        "description": "login request",
+                        "name": "loginRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/common.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Result"
                         }
                     }
                 }
@@ -120,7 +138,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "controller.Result": {
+        "common.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "common.Result": {
             "type": "object",
             "properties": {
                 "code": {
@@ -132,7 +161,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controller.TransferRequest": {
+        "common.TransferRequest": {
             "type": "object",
             "properties": {
                 "amount": {

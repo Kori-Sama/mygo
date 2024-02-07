@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"mygo/config"
 	"mygo/controller"
 	"mygo/middlewares"
@@ -30,8 +29,6 @@ func main() {
 	model.InitEngine()
 	model.SyncTables()
 
-	fmt.Printf(config.Logo)
-
 	gin.SetMode(config.Server.Mode)
 
 	app := gin.Default()
@@ -40,10 +37,12 @@ func main() {
 	auth := app.Group("/api")
 	auth.Use(middlewares.JwtAuth())
 
+	app.POST("/api/login", controller.Login)
+
 	bc := auth.Group("/blockchain")
 	{
-		bc.POST("/createWallet/:username/:passphrase", controller.CreateWallet)
-		bc.GET("/getBalance/:username", controller.GetBalance)
+		bc.POST("/createWallet/:passphrase", controller.CreateWallet)
+		bc.GET("/getBalance", controller.GetBalance)
 		bc.POST("/transfer", controller.Transfer)
 	}
 

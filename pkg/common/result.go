@@ -55,7 +55,7 @@ func SelectInternalError(ctx *gin.Context, err error) {
 		return
 	}
 	if CheckInternalError(err) {
-		ctx.JSON(500, InternalError(err.Error()))
+		ctx.AbortWithStatusJSON(500, InternalError(err.Error()))
 		return
 	}
 }

@@ -3,7 +3,7 @@ package common
 import "errors"
 
 var (
-	ErrorEmpty            = errors.New("username and password cannot be empty")
+	ErrorEmpty            = errors.New("empty parameter")
 	ErrorUnknownUsername  = errors.New("unknown username")
 	ErrorWrongPassword    = errors.New("wrong password")
 	ErrorNoWallet         = errors.New("user do not have wallet")

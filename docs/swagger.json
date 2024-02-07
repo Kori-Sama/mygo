@@ -12,7 +12,7 @@
     },
     "host": "localhost:8888",
     "paths": {
-        "/api/blockchain/createWallet/{username}/{passphrase}": {
+        "/api/blockchain/createWallet/{passphrase}": {
             "post": {
                 "description": "create wallet in blockchain",
                 "produces": [
@@ -25,13 +25,6 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "username",
-                        "name": "username",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
                         "description": "passphrase",
                         "name": "passphrase",
                         "in": "path",
@@ -42,13 +35,13 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.Result"
+                            "$ref": "#/definitions/common.Result"
                         }
                     }
                 }
             }
         },
-        "/api/blockchain/getBalance/{username}": {
+        "/api/blockchain/getBalance": {
             "get": {
                 "description": "get balance amount from wallet",
                 "produces": [
@@ -58,20 +51,11 @@
                     "blockchain"
                 ],
                 "summary": "get balance",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "username",
-                        "name": "username",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.Result"
+                            "$ref": "#/definitions/common.Result"
                         }
                     }
                 }
@@ -97,7 +81,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/controller.TransferRequest"
+                            "$ref": "#/definitions/common.TransferRequest"
                         }
                     }
                 ],
@@ -105,7 +89,41 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/controller.Result"
+                            "$ref": "#/definitions/common.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "description": "login",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "login",
+                "parameters": [
+                    {
+                        "description": "login request",
+                        "name": "loginRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/common.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Result"
                         }
                     }
                 }
@@ -113,7 +131,18 @@
         }
     },
     "definitions": {
-        "controller.Result": {
+        "common.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "common.Result": {
             "type": "object",
             "properties": {
                 "code": {
@@ -125,7 +154,7 @@
                 }
             }
         },
-        "controller.TransferRequest": {
+        "common.TransferRequest": {
             "type": "object",
             "properties": {
                 "amount": {

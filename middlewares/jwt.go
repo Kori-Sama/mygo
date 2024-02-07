@@ -2,8 +2,8 @@ package middlewares
 
 import (
 	"mygo/config"
-	"mygo/model"
 	"mygo/pkg/common"
+	"mygo/pkg/constants"
 	"mygo/pkg/utils"
 	"strings"
 	"time"
@@ -11,31 +11,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const (
-	TokenName   = "Authorization"
-	TokenPrefix = "Bearer: "
-)
-
 func JwtAuth() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader(TokenName)
-		if token == "" || !strings.HasPrefix(token, TokenPrefix) {
+		token := ctx.GetHeader(constants.TOKEN_NAME)
+		if token == "" || !strings.HasPrefix(token, constants.TOKEN_PREFIX) {
 			ctx.AbortWithStatusJSON(403, common.NoAuth())
 			return
 		}
 
-		token = token[len(TokenPrefix):]
+		token = token[len(constants.TOKEN_PREFIX):]
 		claims, err := utils.ParseToken(token)
 		if err != nil {
 			ctx.AbortWithStatusJSON(403, common.NoAuth())
 			return
 		}
 
-		user, err := model.GetUserById(claims.Id)
-		if err != nil || user.Token != token {
-			ctx.AbortWithStatusJSON(403, common.NoAuth())
-			return
-		}
 		duration, err := utils.GetTokenDuration(token)
 		if err != nil {
 			ctx.AbortWithStatusJSON(403, common.NoAuth())
@@ -47,11 +37,16 @@ func JwtAuth() gin.HandlerFunc {
 		}
 
 		if duration < time.Duration(config.JwtConfig.RefreshExpire)*time.Minute {
-			if err = user.UpdateToken(); err != nil {
-				ctx.AbortWithStatusJSON(500, common.InternalError(err.Error()))
+			newToken, err := utils.GenerateToken(claims.Id, claims.Name)
+			if err != nil {
+				ctx.AbortWithStatusJSON(403, common.InternalError(err.Error()))
 				return
 			}
+
+			ctx.Header(constants.TOKEN_NAME, constants.TOKEN_PREFIX+newToken)
 		}
+
+		ctx.Set(constants.LOGIN_USER, common.LoginUser{Id: claims.Id, Name: claims.Name})
 
 		ctx.Next()
 	}

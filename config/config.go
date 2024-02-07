@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -84,9 +85,10 @@ func InitConfig() {
 	Blockchain = config.Blockchain
 	JwtConfig = config.JwtConfig
 
+	fmt.Print(logo)
 }
 
-const Logo = `
+const logo = `
   __  ____     _______  ____    _   _   _   _   _ 
  |  \/  \ \   / / ____|/ __ \  | | | | | | | | | |
  | \  / |\ \_/ / |  __| |  | | | | | | | | | | | |

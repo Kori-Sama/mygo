@@ -7,11 +7,11 @@ import (
 	"mygo/pkg/common"
 )
 
-func CreateWallet(username, passphrase string) error {
-	if username == "" || passphrase == "" {
+func CreateWallet(id int, passphrase string) error {
+	if passphrase == "" {
 		return common.ErrorEmpty
 	}
-	user, err := model.GetUserByName(username)
+	user, err := model.GetUserById(id)
 	if err != nil {
 		return err
 	}
@@ -30,11 +30,8 @@ func CreateWallet(username, passphrase string) error {
 	return nil
 }
 
-func GetBalance(username string) (string, error) {
-	if username == "" {
-		return "", common.ErrorEmpty
-	}
-	user, err := model.GetUserByName(username)
+func GetBalance(id int) (string, error) {
+	user, err := model.GetUserById(id)
 	if err != nil {
 		return "", err
 	}

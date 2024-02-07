@@ -2,18 +2,39 @@ package controller
 
 import (
 	"mygo/pkg/common"
+	"mygo/pkg/constants"
+	"mygo/pkg/utils"
 	"mygo/service"
 
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary		login
+// @Description	login
+// @Tags			user
+// @Accept			json
+// @Produce		json
+// @Param			loginRequest	body		common.LoginRequest	true	"login request"
+// @Success		200				{object}	common.Result	"OK"
+// @Router			/api/login [post]
 func Login(ctx *gin.Context) {
-	username := ctx.PostForm("username")
-	password := ctx.PostForm("password")
-	if err := service.Login(username, password); err != nil {
+	var loginRequest common.LoginRequest
+	if err := ctx.ShouldBindJSON(&loginRequest); err != nil {
+		ctx.JSON(400, common.Bad(err.Error()))
+		return
+	}
+	username, password := loginRequest.Username, loginRequest.Password
+	id, err := service.Login(username, password)
+	if err != nil {
 		common.SelectInternalError(ctx, err)
 		ctx.JSON(400, common.Bad(err.Error()))
 		return
 	}
+	token, err := utils.GenerateToken(id, username)
+	if err != nil {
+		ctx.JSON(500, common.InternalError(err.Error()))
+		return
+	}
+	ctx.Header(constants.TOKEN_NAME, constants.TOKEN_PREFIX+token)
 	ctx.JSON(200, common.Ok(nil))
 }
