@@ -85,6 +85,18 @@ func BalanceOf(address string) (*big.Int, error) {
 	return res, nil
 }
 
+func Decimal() (uint8, error) {
+	_, _, token, err := connectToChain()
+	if err != nil {
+		return 0, err
+	}
+	res, err := token.Decimals(nil)
+	if err != nil {
+		return 0, err
+	}
+	return res, nil
+}
+
 // func DeployContract(conn *ethclient.Client) {
 // 	// ks := keystore.NewKeyStore(keystorePath, keystore.LightScryptN, keystore.LightScryptP)
 // 	keyin := strings.NewReader(ownerInfo)

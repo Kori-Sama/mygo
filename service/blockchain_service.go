@@ -1,6 +1,7 @@
 package service
 
 import (
+	"math/big"
 	"mygo/blockchain"
 	"mygo/model"
 	"mygo/pkg/common"
@@ -24,4 +25,32 @@ func CreateWallet(username, passphrase string) error {
 	}
 
 	return nil
+}
+
+func GetBalance(username string) (float64, error) {
+	decimal, err := blockchain.Decimal()
+	if err != nil {
+		return 0, common.ErrorGetDecimals
+	}
+
+	if username == "" {
+		return 0, common.ErrorEmpty
+	}
+	user, err := model.GetUserByName(username)
+	if err != nil {
+		return 0, err
+	}
+	balance, err := blockchain.BalanceOf(user.Wallet)
+	if err != nil {
+		return 0, common.ErrorGetBalance
+	}
+
+	return calcToken(balance, decimal), nil
+}
+
+func calcToken(balance *big.Int, decimal uint8) float64 {
+	b := new(big.Float).SetInt(balance)
+	d := new(big.Float).SetInt(new(big.Int).Exp(big.NewInt(10), big.NewInt(int64(decimal)), nil))
+	f, _ := new(big.Float).Quo(b, d).Float64()
+	return f
 }
