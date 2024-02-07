@@ -2,46 +2,57 @@ package middlewares
 
 import (
 	"mygo/config"
+	"mygo/model"
 	"mygo/pkg/common"
+	"mygo/pkg/utils"
+	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
+	"github.com/gin-gonic/gin"
 )
 
-type JwtClaims struct {
-	Id   int
-	Name string
-	jwt.RegisteredClaims
-}
+const (
+	TokenName   = "Authorization"
+	TokenPrefix = "Bearer: "
+)
 
-var secret = []byte(config.JwtConfig.Secret)
+func JwtAuth() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader(TokenName)
+		if token == "" || !strings.HasPrefix(token, TokenPrefix) {
+			ctx.AbortWithStatusJSON(403, common.NoAuth())
+			return
+		}
 
-func GenerateToken(id int, name string) (string, error) {
-	jwtClaims := JwtClaims{
-		id,
-		name,
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * time.Duration(config.JwtConfig.TokenExpire))),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			Subject:   "MyGO",
-		},
+		token = token[len(TokenPrefix):]
+		claims, err := utils.ParseToken(token)
+		if err != nil {
+			ctx.AbortWithStatusJSON(403, common.NoAuth())
+			return
+		}
+
+		user, err := model.GetUserById(claims.Id)
+		if err != nil || user.Token != token {
+			ctx.AbortWithStatusJSON(403, common.NoAuth())
+			return
+		}
+		duration, err := utils.GetTokenDuration(token)
+		if err != nil {
+			ctx.AbortWithStatusJSON(403, common.NoAuth())
+			return
+		}
+		if duration < 0 {
+			ctx.AbortWithStatusJSON(403, common.NoAuth())
+			return
+		}
+
+		if duration < time.Duration(config.JwtConfig.RefreshExpire)*time.Minute {
+			if err = user.UpdateToken(); err != nil {
+				ctx.AbortWithStatusJSON(500, common.InternalError(err.Error()))
+				return
+			}
+		}
+
+		ctx.Next()
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwtClaims)
-	return token.SignedString(secret)
-}
-
-func ParseToken(tokenStr string) (JwtClaims, error) {
-	jwtClaims := JwtClaims{}
-	token, err := jwt.ParseWithClaims(tokenStr, &jwtClaims, func(token *jwt.Token) (interface{}, error) {
-		return secret, nil
-	})
-	if err == nil && !token.Valid {
-		err = common.ErrorInvalidToken
-	}
-	return jwtClaims, err
-}
-
-func IsTokenValid(tokenStr string) bool {
-	_, err := ParseToken(tokenStr)
-	return err == nil
 }

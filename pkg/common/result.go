@@ -1,4 +1,8 @@
-package controller
+package common
+
+import (
+	"github.com/gin-gonic/gin"
+)
 
 type Result struct {
 	Code int    `json:"code"`
@@ -43,5 +47,15 @@ func NotFound() Result {
 		Code: 404,
 		Msg:  "Not Found",
 		Data: nil,
+	}
+}
+
+func SelectInternalError(ctx *gin.Context, err error) {
+	if err == nil {
+		return
+	}
+	if CheckInternalError(err) {
+		ctx.JSON(500, InternalError(err.Error()))
+		return
 	}
 }

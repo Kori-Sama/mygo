@@ -18,5 +18,8 @@ func Login(username string, password string) error {
 	if user.Password != password {
 		return common.ErrorWrongPassword
 	}
+	if err = user.UpdateToken(); err != nil {
+		return err
+	}
 	return nil
 }

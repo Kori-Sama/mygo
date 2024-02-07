@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -38,8 +37,9 @@ type blockchainConfig struct {
 }
 
 type jwtConfig struct {
-	TokenExpire int64  `yaml:"tokenExpire"`
-	Secret      string `yaml:"secret"`
+	TokenExpire   int64  `yaml:"tokenExpire"`
+	RefreshExpire int64  `yaml:"refreshExpire"`
+	Secret        string `yaml:"secret"`
 }
 
 var Server serverConfig
@@ -84,14 +84,14 @@ func InitConfig() {
 	Blockchain = config.Blockchain
 	JwtConfig = config.JwtConfig
 
-	fmt.Println(logo)
 }
 
-var logo = `
+const Logo = `
   __  ____     _______  ____    _   _   _   _   _ 
  |  \/  \ \   / / ____|/ __ \  | | | | | | | | | |
  | \  / |\ \_/ / |  __| |  | | | | | | | | | | | |
  | |\/| | \   /| | |_ | |  | | | | | | | | | | | |
  | |  | |  | | | |__| | |__| | |_| |_| |_| |_| |_|
  |_|  |_|  |_|  \_____|\____/  (_) (_) (_) (_) (_)
+
 `

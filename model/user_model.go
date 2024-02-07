@@ -2,15 +2,17 @@ package model
 
 import (
 	"mygo/pkg/common"
+	"mygo/pkg/utils"
 )
 
 type User struct {
-	Id         int64
+	Id         int
 	Name       string `xorm:"varchar(200) unique"`
 	Age        int
 	Password   string `xorm:"varchar(200) notnull"`
 	Wallet     string `xorm:"varchar(200)"`
 	Passphrase string `xorm:"varchar(200)"`
+	Token      string `xorm:"varchar(300)"`
 }
 
 func CreateUser(name, password string, age int) error {
@@ -26,7 +28,7 @@ func CreateUser(name, password string, age int) error {
 	return nil
 }
 
-func GetUserById(id int64) (*User, error) {
+func GetUserById(id int) (*User, error) {
 	user := &User{}
 	_, err := engine.ID(id).Get(user)
 	if err != nil {
@@ -68,6 +70,19 @@ func (u *User) UpdateWallet(wallet string) error {
 func (u *User) UpdatePassphrase(passphrase string) error {
 	u.Passphrase = passphrase
 	_, err := engine.ID(u.Id).Cols("passphrase").Update(u)
+	if err != nil {
+		return common.ErrorOperateDatabase
+	}
+	return nil
+}
+
+func (u *User) UpdateToken() error {
+	token, err := utils.GenerateToken(u.Id, u.Name)
+	if err != nil {
+		return err
+	}
+	u.Token = token
+	_, err = engine.ID(u.Id).Cols("token").Update(u)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}

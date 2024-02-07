@@ -1,8 +1,8 @@
 package controller
 
 import (
+	"mygo/pkg/common"
 	"mygo/service"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,8 +11,9 @@ func Login(ctx *gin.Context) {
 	username := ctx.PostForm("username")
 	password := ctx.PostForm("password")
 	if err := service.Login(username, password); err != nil {
-		ctx.JSON(http.StatusBadRequest, err.Error())
+		common.SelectInternalError(ctx, err)
+		ctx.JSON(400, common.Bad(err.Error()))
 		return
 	}
-	ctx.JSON(200, nil)
+	ctx.JSON(200, common.Ok(nil))
 }

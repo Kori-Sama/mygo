@@ -20,15 +20,12 @@ func CreateWallet(ctx *gin.Context) {
 	username := ctx.Param("username")
 	passphrase := ctx.Param("passphrase")
 	if err := service.CreateWallet(username, passphrase); err != nil {
-		if common.CheckInternalError(err) {
-			ctx.JSON(500, InternalError(err.Error()))
-			return
-		}
-		ctx.JSON(400, Bad(err.Error()))
+		common.SelectInternalError(ctx, err)
+		ctx.JSON(400, common.Bad(err.Error()))
 		return
 	}
 
-	ctx.JSON(200, Ok(nil))
+	ctx.JSON(200, common.Ok(nil))
 }
 
 // @Summary		get balance
@@ -42,14 +39,11 @@ func GetBalance(ctx *gin.Context) {
 	username := ctx.Param("username")
 	balance, err := service.GetBalance(username)
 	if err != nil {
-		if common.CheckInternalError(err) {
-			ctx.JSON(500, InternalError(err.Error()))
-			return
-		}
-		ctx.JSON(400, Bad(err.Error()))
+		common.SelectInternalError(ctx, err)
+		ctx.JSON(400, common.Bad(err.Error()))
 		return
 	}
-	ctx.JSON(200, Ok(balance))
+	ctx.JSON(200, common.Ok(balance))
 }
 
 // @Summary		transfer funds
@@ -68,15 +62,12 @@ func Transfer(ctx *gin.Context) {
 	}
 
 	if err := service.Transfer(transferRequest.Username, transferRequest.Passphrase, transferRequest.ToName, transferRequest.Amount); err != nil {
-		if common.CheckInternalError(err) {
-			ctx.JSON(500, InternalError(err.Error()))
-			return
-		}
-		ctx.JSON(400, Bad(err.Error()))
+		common.SelectInternalError(ctx, err)
+		ctx.JSON(400, common.Bad(err.Error()))
 		return
 	}
 
-	ctx.JSON(200, Ok(nil))
+	ctx.JSON(200, common.Ok(nil))
 }
 
 type TransferRequest struct {
