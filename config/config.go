@@ -12,6 +12,7 @@ type config struct {
 	Server     serverConfig     `yaml:"server"`
 	Database   databaseConfig   `yaml:"database"`
 	Blockchain blockchainConfig `yaml:"blockchain"`
+	JwtConfig  jwtConfig        `yaml:"jwt"`
 }
 
 type serverConfig struct {
@@ -36,9 +37,15 @@ type blockchainConfig struct {
 	OwnerAddress    string `yaml:"ownerAddress"`
 }
 
+type jwtConfig struct {
+	TokenExpire int64  `yaml:"tokenExpire"`
+	Secret      string `yaml:"secret"`
+}
+
 var Server serverConfig
 var Database databaseConfig
 var Blockchain blockchainConfig
+var JwtConfig jwtConfig
 
 func InitLog() {
 	log.SetPrefix("MyGO: ")
@@ -75,6 +82,7 @@ func InitConfig() {
 	Server = config.Server
 	Database = config.Database
 	Blockchain = config.Blockchain
+	JwtConfig = config.JwtConfig
 
 	fmt.Println(logo)
 }

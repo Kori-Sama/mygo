@@ -14,23 +14,21 @@ import (
 // @Param			username	path	string	true	"username"
 // @Param			passphrase	path	string	true	"passphrase"
 // @Produce		json
-// @Success		200	{object}	nil		"OK"
-// @failure		400	{object}	string	"Bad Request"
-// @failure		500	{object}	string	"Internal Server Error"
+// @Success		200			{object}	Result			"OK"
 // @Router			/api/blockchain/createWallet/{username}/{passphrase} [post]
 func CreateWallet(ctx *gin.Context) {
 	username := ctx.Param("username")
 	passphrase := ctx.Param("passphrase")
 	if err := service.CreateWallet(username, passphrase); err != nil {
 		if common.CheckInternalError(err) {
-			ctx.JSON(http.StatusInternalServerError, err.Error())
+			ctx.JSON(500, InternalError(err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusBadRequest, err.Error())
+		ctx.JSON(400, Bad(err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, nil)
+	ctx.JSON(200, Ok(nil))
 }
 
 // @Summary		get balance
@@ -38,23 +36,20 @@ func CreateWallet(ctx *gin.Context) {
 // @Tags			blockchain
 // @Param			username	path	string	true	"username"
 // @Produce		json
-// @Success		200	{object}	string	"OK"
-// @failure		400	{object}	string	"Bad Request"
-// @failure		500	{object}	string	"Internal Server Error"
+// @Success		200			{object}	Result			"OK"
 // @Router			/api/blockchain/getBalance/{username} [get]
 func GetBalance(ctx *gin.Context) {
 	username := ctx.Param("username")
 	balance, err := service.GetBalance(username)
 	if err != nil {
 		if common.CheckInternalError(err) {
-			ctx.JSON(http.StatusInternalServerError, err.Error())
+			ctx.JSON(500, InternalError(err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusBadRequest, err.Error())
+		ctx.JSON(400, Bad(err.Error()))
 		return
 	}
-
-	ctx.JSON(http.StatusOK, balance)
+	ctx.JSON(200, Ok(balance))
 }
 
 // @Summary		transfer funds
@@ -63,9 +58,7 @@ func GetBalance(ctx *gin.Context) {
 // @Accept			json
 // @Produce		json
 // @Param			transfer	body		TransferRequest	true	"transfer request json"
-// @Success		200			{object}	nil				"OK"
-// @failure		400			{object}	string			"Bad Request"
-// @failure		500			{object}	string			"Internal Server Error"
+// @Success		200			{object}	Result			"OK"
 // @Router			/api/blockchain/transfer [post]
 func Transfer(ctx *gin.Context) {
 	var transferRequest TransferRequest
@@ -76,14 +69,14 @@ func Transfer(ctx *gin.Context) {
 
 	if err := service.Transfer(transferRequest.Username, transferRequest.Passphrase, transferRequest.ToName, transferRequest.Amount); err != nil {
 		if common.CheckInternalError(err) {
-			ctx.JSON(http.StatusInternalServerError, err.Error())
+			ctx.JSON(500, InternalError(err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusBadRequest, err.Error())
+		ctx.JSON(400, Bad(err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, nil)
+	ctx.JSON(200, Ok(nil))
 }
 
 type TransferRequest struct {

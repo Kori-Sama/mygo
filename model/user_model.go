@@ -6,7 +6,7 @@ import (
 
 type User struct {
 	Id         int64
-	Name       string
+	Name       string `xorm:"varchar(200) unique"`
 	Age        int
 	Password   string `xorm:"varchar(200) notnull"`
 	Wallet     string `xorm:"varchar(200)"`
