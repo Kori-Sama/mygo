@@ -2,9 +2,9 @@ package main
 
 import (
 	"mygo/config"
-	"mygo/internal/controller"
-	"mygo/internal/middlewares"
-	"mygo/internal/model"
+	"mygo/controller"
+	"mygo/middlewares"
+	"mygo/model"
 
 	_ "mygo/docs"
 

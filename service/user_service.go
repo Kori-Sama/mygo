@@ -1,13 +1,13 @@
 package service
 
 import (
-	"mygo/internal/model"
-	utils "mygo/internal/pkg"
+	"mygo/model"
+	"mygo/pkg/common"
 )
 
 func Login(username string, password string) error {
 	if username == "" || password == "" {
-		return utils.ErrorEmpty
+		return common.ErrorEmpty
 	}
 
 	user, err := model.GetUserByName(username)
@@ -16,7 +16,7 @@ func Login(username string, password string) error {
 	}
 
 	if user.Password != password {
-		return utils.ErrorWrongPassword
+		return common.ErrorWrongPassword
 	}
 	return nil
 }

@@ -12,12 +12,13 @@ import (
 var engine *xorm.Engine
 
 func InitEngine() {
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8",
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=%s",
 		config.Database.Username,
 		config.Database.Password,
 		config.Database.Host,
 		config.Database.Port,
-		config.Database.DbName)
+		config.Database.DbName,
+		config.Database.Charset)
 
 	var err error
 	engine, err = xorm.NewEngine("mysql", dataSourceName)

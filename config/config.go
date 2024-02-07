@@ -25,6 +25,7 @@ type databaseConfig struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	DbName   string `yaml:"dbName"`
+	Charset  string `yaml:"charset"`
 }
 
 type blockchainConfig struct {
@@ -42,7 +43,7 @@ var Blockchain blockchainConfig
 func InitLog() {
 	log.SetPrefix("MyGO: ")
 
-	f, err := os.OpenFile("log/server.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	f, err := os.OpenFile("log/sys.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		if f, err = os.Create("log/server.log"); err != nil {
 			log.Fatalf("Failed to create log file: %v", err)

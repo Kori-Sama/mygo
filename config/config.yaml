@@ -8,6 +8,7 @@ database:
   username: root
   password: 123456
   dbName: mygo
+  charset: utf8
 
 blockchain:
   gethClient: "http://localhost:8545"
