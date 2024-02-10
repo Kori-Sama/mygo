@@ -9,9 +9,9 @@ func GetValueFromContext[T any](ctx *gin.Context, key string) *T {
 	if !ok {
 		return nil
 	}
-	user, ok := value.(*T)
+	user, ok := value.(T)
 	if !ok {
 		return nil
 	}
-	return user
+	return &user
 }

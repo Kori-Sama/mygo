@@ -12,6 +12,8 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
+// This type is user's login information stored in the context of gin.
+// The value comes from JWT token, so we can use it to get user's information.
 type LoginUser struct {
 	Id   int
 	Name string

@@ -9,14 +9,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary		login
-// @Description	login
-// @Tags			user
-// @Accept			json
-// @Produce		json
-// @Param			loginRequest	body		common.LoginRequest	true	"login request"
-// @Success		200				{object}	common.Result	"OK"
-// @Router			/api/login [post]
+//	@Summary		login
+//	@Description	login
+//	@Tags			user
+//	@Accept			json
+//	@Produce		json
+//	@Param			loginRequest	body		common.LoginRequest	true	"login request"
+//	@Success		200				{object}	common.Result		"OK"
+//	@Router			/api/login [post]
 func Login(ctx *gin.Context) {
 	var loginRequest common.LoginRequest
 	if err := ctx.ShouldBindJSON(&loginRequest); err != nil {

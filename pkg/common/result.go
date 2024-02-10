@@ -1,6 +1,8 @@
 package common
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,10 +36,10 @@ func InternalError(msg string) Result {
 	}
 }
 
-func NoAuth() Result {
+func NoAuth(msg string) Result {
 	return Result{
 		Code: 403,
-		Msg:  "Unauthorized",
+		Msg:  fmt.Sprintf("Unauthorized: %s", msg),
 		Data: nil,
 	}
 }

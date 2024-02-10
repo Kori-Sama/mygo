@@ -46,7 +46,7 @@ type jwtConfig struct {
 var Server serverConfig
 var Database databaseConfig
 var Blockchain blockchainConfig
-var JwtConfig jwtConfig
+var Jwt jwtConfig
 
 func InitLog() {
 	log.SetPrefix("MyGO: ")
@@ -83,12 +83,12 @@ func InitConfig() {
 	Server = config.Server
 	Database = config.Database
 	Blockchain = config.Blockchain
-	JwtConfig = config.JwtConfig
+	Jwt = config.JwtConfig
 
-	fmt.Print(logo)
+	fmt.Print(LOGO)
 }
 
-const logo = `
+const LOGO = `
   __  ____     _______  ____    _   _   _   _   _ 
  |  \/  \ \   / / ____|/ __ \  | | | | | | | | | |
  | \  / |\ \_/ / |  __| |  | | | | | | | | | | | |

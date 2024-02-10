@@ -7,8 +7,8 @@ import (
 )
 
 func TestJwt(t *testing.T) {
-	config.JwtConfig.Secret = "mygo"
-	config.JwtConfig.TokenExpire = 60
+	config.Jwt.Secret = "mygo"
+	config.Jwt.TokenExpire = 60
 	token, _ := utils.GenerateToken(0, "name")
 	t.Log(token)
 	t.Log(utils.ParseToken(token))
