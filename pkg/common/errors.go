@@ -3,12 +3,16 @@ package common
 import "errors"
 
 var (
-	ErrorEmpty            = errors.New("empty parameter")
-	ErrorUnknownUsername  = errors.New("unknown username")
-	ErrorWrongPassword    = errors.New("wrong password")
+	ErrorEmpty           = errors.New("empty parameter")
+	ErrorUnknownUsername = errors.New("unknown username")
+	ErrorUnknownUserId   = errors.New("unknown user id")
+	ErrorWrongPassword   = errors.New("wrong password")
+	ErrorRepeatUsername  = errors.New("repeat username")
+	// blockchain error
 	ErrorNoWallet         = errors.New("user do not have wallet")
 	ErrorBalanceNotEnough = errors.New("balance is not enough")
 	ErrorInvalidAmount    = errors.New("invalid amount")
+	// token error
 	ErrorInvalidToken     = errors.New("invalid token")
 	ErrorExpiredToken     = errors.New("expired token")
 	ErrorGetInfoFromToken = errors.New("failed to get info from token")

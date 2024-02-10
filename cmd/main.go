@@ -38,6 +38,7 @@ func main() {
 	auth.Use(middlewares.JwtAuth())
 
 	app.POST("/api/login", controller.Login)
+	app.POST("/api/register", controller.Register)
 
 	bc := auth.Group("/blockchain")
 	{

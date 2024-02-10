@@ -6,6 +6,13 @@ definitions:
       username:
         type: string
     type: object
+  common.RegisterRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   common.Result:
     properties:
       code:
@@ -21,8 +28,6 @@ definitions:
       passphrase:
         type: string
       toName:
-        type: string
-      username:
         type: string
     type: object
 host: localhost:8888
@@ -109,6 +114,28 @@ paths:
           schema:
             $ref: '#/definitions/common.Result'
       summary: login
+      tags:
+      - user
+  /api/register:
+    post:
+      consumes:
+      - application/json
+      description: register
+      parameters:
+      - description: register request
+        in: body
+        name: registerRequest
+        required: true
+        schema:
+          $ref: '#/definitions/common.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Result'
+      summary: register
       tags:
       - user
 swagger: "2.0"

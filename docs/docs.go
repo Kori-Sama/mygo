@@ -135,10 +135,55 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/register": {
+            "post": {
+                "description": "register",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "register",
+                "parameters": [
+                    {
+                        "description": "register request",
+                        "name": "registerRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/common.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Result"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
         "common.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "common.RegisterRequest": {
             "type": "object",
             "properties": {
                 "password": {
@@ -171,9 +216,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "toName": {
-                    "type": "string"
-                },
-                "username": {
                     "type": "string"
                 }
             }

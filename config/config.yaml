@@ -15,9 +15,9 @@ blockchain:
   keystorePath: "/home/kori/blockchain/data/keystore"
   contractAddress: "0x81aB3bcfA5afA7d2469c4002B0422834d2D45319"
   ownerPassword: "123"
-  ownerAddress: "2659794f119bef5c81942c2afd9e4f9a99347fb3"
+  ownerAddress: "0x2659794f119bef5c81942c2afd9e4f9a99347fb3"
 
 jwt:
   tokenExpire: 60
   refreshExpire: 10
-  secret: MyGO!!!!! is a bang team with five girls, Anno, Tomori, Soyo, Taki and Rena
+  secret: "MyGO!!!!! is a bang team with five girls, Anno, Tomori, Soyo, Taki and Rena"

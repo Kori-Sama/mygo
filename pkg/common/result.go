@@ -2,8 +2,6 @@ package common
 
 import (
 	"fmt"
-
-	"github.com/gin-gonic/gin"
 )
 
 type Result struct {
@@ -49,15 +47,5 @@ func NotFound() Result {
 		Code: 404,
 		Msg:  "Not Found",
 		Data: nil,
-	}
-}
-
-func SelectInternalError(ctx *gin.Context, err error) {
-	if err == nil {
-		return
-	}
-	if CheckInternalError(err) {
-		ctx.AbortWithStatusJSON(500, InternalError(err.Error()))
-		return
 	}
 }

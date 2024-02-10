@@ -13,17 +13,16 @@ type User struct {
 	Passphrase string `xorm:"varchar(200)"`
 }
 
-func CreateUser(name, password string, age int) error {
+func CreateUser(name, password string) (int, error) {
 	user := User{
 		Name:     name,
 		Password: password,
-		Age:      age,
 	}
 	_, err := engine.Insert(&user)
 	if err != nil {
-		return common.ErrorOperateDatabase
+		return 0, common.ErrorOperateDatabase
 	}
-	return nil
+	return user.Id, nil
 }
 
 func GetUserById(id int) (*User, error) {
@@ -45,6 +44,14 @@ func GetUserByName(name string) (*User, error) {
 		return nil, common.ErrorUnknownUsername
 	}
 	return user, nil
+}
+
+func (u *User) UpdateUser() error {
+	_, err := engine.ID(u.Id).Update(u)
+	if err != nil {
+		return common.ErrorOperateDatabase
+	}
+	return nil
 }
 
 func (u *User) UpdatePassword(password string) error {
