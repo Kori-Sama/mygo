@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	"gopkg.in/yaml.v3"
 )
@@ -51,25 +52,28 @@ var Jwt jwtConfig
 func InitLog() {
 	log.SetPrefix("MyGO: ")
 
-	f, err := os.OpenFile("log/sys.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		if f, err = os.Create("log/server.log"); err != nil {
-			log.Fatalf("Failed to create log file: %v", err)
-		}
-	}
-	log.SetOutput(f)
+	logPath := "log/sys.log"
 
-	// f, err = os.OpenFile("log/http.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	// if err != nil {
-	// 	if f, err = os.Create("log/http.log"); err != nil {
-	// 		log.Fatalf("Failed to create log file: %v", err)
-	// 	}
-	// }
-	// return io.MultiWriter(gin.DefaultWriter, f)
+	dirPath := filepath.Dir(logPath)
+
+	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
+		log.Fatalf("Failed to create log directory: %v", err)
+		return
+	}
+
+	f, err := os.OpenFile(logPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("Failed to open log file: %v", err)
+		return
+	}
+
+	log.SetOutput(f)
 }
 
 func InitConfig() {
-	bytes, err := os.ReadFile("config/config.yaml")
+	configPath := "config/config.yaml"
+
+	bytes, err := os.ReadFile(configPath)
 	if err != nil {
 		log.Fatalf("Failed to load config file: %v", err)
 	}

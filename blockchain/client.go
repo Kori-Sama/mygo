@@ -12,6 +12,8 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/accounts/keystore"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 )
 
@@ -53,6 +55,7 @@ func Transfer(fromAddress, passphrase, toAddress string, amount *big.Int) error 
 	if err != nil {
 		return fmt.Errorf("failed to create authorized transactor: %v", err)
 	}
+
 	tx, err := token.Transfer(auth, common.HexToAddress(toAddress), amount)
 	if err != nil {
 		return fmt.Errorf("failed to send transaction: %v", err)
@@ -100,6 +103,50 @@ func Decimal() (*big.Int, error) {
 		return nil, err
 	}
 	return new(big.Int).SetInt64(int64(res)), nil
+}
+
+// Todo! fixing the "invalid sender" error
+func SendTransaction(cl *ethclient.Client, toStr string) error {
+	const SK = "8443ff36077d13716c4643fbd24a2c166563953f2e9bd07a4ae5473f6327b799"
+	const ADDR = "0xbdf642bf296be98aa36b637e3b97b66014d12213"
+	var (
+		sk       = crypto.ToECDSAUnsafe(common.FromHex(SK))
+		to       = common.HexToAddress(toStr)
+		value    = big.NewInt(1)
+		sender   = common.HexToAddress(ADDR)
+		gasLimit = uint64(1000000000)
+	)
+	chainid, err := cl.ChainID(context.Background())
+	if err != nil {
+		return fmt.Errorf("failed to get chain id: %v", err)
+	}
+
+	nonce, err := cl.PendingNonceAt(context.Background(), sender)
+	if err != nil {
+		return fmt.Errorf("failed to get nonce: %v", err)
+	}
+
+	tipCap, _ := cl.SuggestGasTipCap(context.Background())
+	feeCap, _ := cl.SuggestGasPrice(context.Background())
+
+	tx := types.NewTx(
+		&types.DynamicFeeTx{
+			ChainID:   chainid,
+			Nonce:     nonce,
+			GasTipCap: tipCap,
+			GasFeeCap: feeCap,
+			Gas:       gasLimit,
+			To:        &to,
+			Value:     value,
+			Data:      nil,
+		})
+
+	signedTx, err := types.SignTx(tx, types.NewLondonSigner(chainid), sk)
+	if err != nil {
+		return fmt.Errorf("failed to sign transaction: %v", err)
+	}
+
+	return cl.SendTransaction(context.Background(), signedTx)
 }
 
 // func DeployContract(conn *ethclient.Client) {

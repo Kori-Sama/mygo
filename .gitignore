@@ -20,5 +20,7 @@
 # Go workspace file
 go.work
 
-.vscode
+.vscode/settings.json
+.idea
+
 log/*.log
