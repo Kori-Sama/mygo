@@ -10,6 +10,16 @@ database:
   dbName: mygo
   charset: utf8
 
+log:
+  level: debug # Our server logs have five levels: fatal, error, warn, info, debug. When server mode is set as release, log level will be set with warn level automatically if this level is set lower than warn.
+  console: false
+  file: true
+  sysPath: log/sys.log
+  ginPath: log/gin.log
+  format:
+    prefix: MyGO
+    timestamp: "2006-01-02 15:04:05"
+
 jwt:
   tokenExpire: 60
   refreshExpire: 10

@@ -23,8 +23,8 @@ import (
 
 // @host	localhost:8888
 func main() {
-	config.InitLog()
 	config.InitConfig()
+	config.InitLog()
 
 	model.InitEngine()
 	model.SyncTables()

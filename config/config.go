@@ -1,10 +1,8 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 
 	"gopkg.in/yaml.v3"
 )
@@ -14,6 +12,7 @@ type config struct {
 	Database   databaseConfig   `yaml:"database"`
 	Blockchain blockchainConfig `yaml:"blockchain"`
 	JwtConfig  jwtConfig        `yaml:"jwt"`
+	LogConfig  logConfig        `yaml:"log"`
 }
 
 type serverConfig struct {
@@ -44,31 +43,25 @@ type jwtConfig struct {
 	Secret        string `yaml:"secret"`
 }
 
+type logConfig struct {
+	Level   string       `yaml:"level"`
+	Console bool         `yaml:"console"`
+	File    bool         `yaml:"file"`
+	SysPath string       `yaml:"sysPath"`
+	GinPath string       `yaml:"ginPath"`
+	Format  formatConfig `yaml:"format"`
+}
+
+type formatConfig struct {
+	Prefix    string `yaml:"prefix"`
+	Timestamp string `yaml:"timestamp"`
+}
+
 var Server serverConfig
 var Database databaseConfig
 var Blockchain blockchainConfig
 var Jwt jwtConfig
-
-func InitLog() {
-	log.SetPrefix("MyGO: ")
-
-	logPath := "log/sys.log"
-
-	dirPath := filepath.Dir(logPath)
-
-	if err := os.MkdirAll(dirPath, os.ModePerm); err != nil {
-		log.Fatalf("Failed to create log directory: %v", err)
-		return
-	}
-
-	f, err := os.OpenFile(logPath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("Failed to open log file: %v", err)
-		return
-	}
-
-	log.SetOutput(f)
-}
+var Log logConfig
 
 func InitConfig() {
 	configPath := "config/config.yaml"
@@ -88,16 +81,5 @@ func InitConfig() {
 	Database = config.Database
 	Blockchain = config.Blockchain
 	Jwt = config.JwtConfig
-
-	fmt.Print(LOGO)
+	Log = config.LogConfig
 }
-
-const LOGO = `
-  __  ____     _______  ____    _   _   _   _   _ 
- |  \/  \ \   / / ____|/ __ \  | | | | | | | | | |
- | \  / |\ \_/ / |  __| |  | | | | | | | | | | | |
- | |\/| | \   /| | |_ | |  | | | | | | | | | | | |
- | |  | |  | | | |__| | |__| | |_| |_| |_| |_| |_|
- |_|  |_|  |_|  \_____|\____/  (_) (_) (_) (_) (_)
-
-`

@@ -2,8 +2,9 @@ package model
 
 import (
 	"fmt"
-	"log"
 	"mygo/config"
+
+	log "github.com/sirupsen/logrus"
 
 	_ "github.com/go-sql-driver/mysql"
 	"xorm.io/xorm"
@@ -30,6 +31,6 @@ func InitEngine() {
 func SyncTables() {
 	err := engine.Sync2(new(User))
 	if err != nil {
-		log.Fatalf("Failed to sync database: %s", err)
+		log.Warnf("Failed to sync database: %s", err)
 	}
 }
