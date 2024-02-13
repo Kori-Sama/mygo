@@ -7,7 +7,7 @@ import (
 )
 
 func TestStream(t *testing.T) {
-	t.Run("combine", func(t *testing.T) {
+	t.Run("chain", func(t *testing.T) {
 		arr := []int{3, -1, 1, 5, 2, 6, 8, 2, 1, 4, 6, -12, 22, -2, 7}
 
 		got := utils.AsStream[int](arr).Map(func(v int) int {
