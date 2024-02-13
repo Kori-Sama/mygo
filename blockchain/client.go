@@ -34,7 +34,7 @@ func connectToChain() (*ethclient.Client, *big.Int, *Token, error) {
 		return nil, nil, nil, mycommon.ErrorTokenContract
 	}
 
-	log.Infof("Connect to blockchain successfully. Chain ID: %s\n", chainID)
+	log.Infof("Connect to blockchain successfully. Chain ID: %s", chainID)
 	return conn, chainID, token, nil
 }
 
@@ -62,7 +62,7 @@ func Transfer(fromAddress, passphrase, toAddress string, amount *big.Int) error 
 	if err != nil {
 		return fmt.Errorf("failed to send transaction: %v", err)
 	}
-	log.Infof("Transfer successfully. Transaction hash: %s\n", tx.Hash().Hex())
+	log.Infof("Transfer successfully. Transaction hash: %s", tx.Hash().Hex())
 	return nil
 }
 
@@ -73,7 +73,7 @@ func NewAccount(passphrase string) (string, error) {
 		return "", fmt.Errorf("failed to create account: %v", err)
 	}
 
-	log.Infof("Created new account successful. Account address: %s\n", account.Address.Hex())
+	log.Infof("Created new account successful. Account address: %s", account.Address.Hex())
 	return account.Address.Hex(), nil
 }
 

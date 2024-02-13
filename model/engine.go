@@ -26,6 +26,7 @@ func InitEngine() {
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %s", err)
 	}
+	log.Infof("Succeed to connect to database %s", config.Database.DbName)
 }
 
 func SyncTables() {
@@ -33,4 +34,5 @@ func SyncTables() {
 	if err != nil {
 		log.Warnf("Failed to sync database: %s", err)
 	}
+	log.Infof("Succeed to sync the tables of database %s", config.Database.DbName)
 }

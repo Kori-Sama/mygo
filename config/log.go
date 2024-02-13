@@ -32,8 +32,9 @@ func InitLog() {
 	initSystemLog()
 	initGinLog()
 
+	fmt.Print(logo)
+
 	log.Info("Logger initialized successfully")
-	fmt.Print(LOGO)
 }
 
 func initSystemLog() {
@@ -105,7 +106,7 @@ func initGinLog() {
 	gin.DefaultWriter = io.MultiWriter(logOutput...)
 }
 
-const LOGO = `
+const logo = `
   __  ____     _______  ____    _   _   _   _   _ 
  |  \/  \ \   / / ____|/ __ \  | | | | | | | | | |
  | \  / |\ \_/ / |  __| |  | | | | | | | | | | | |

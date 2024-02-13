@@ -47,7 +47,7 @@ func GetTokenDuration(tokenStr string) (time.Duration, error) {
 	if err != nil {
 		return 0, common.ErrorInvalidToken
 	}
-	return token.ExpiresAt.Time.Sub(time.Now()), nil
+	return time.Until(token.ExpiresAt.Time), nil
 }
 
 func IsTokenValid(tokenStr string) bool {
