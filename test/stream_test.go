@@ -15,8 +15,8 @@ func TestStream(t *testing.T) {
 		}).Filter(func(v int) bool {
 			return v > 0
 		}).Sort(func(i, j int) bool {
-			return i < j
-		}).Take(5).ToSlice()
+			return i > j
+		}).Reverse().Take(5).ToSlice()
 
 		want := []int{2, 2, 4, 4, 6}
 		if !reflect.DeepEqual(got, want) {
@@ -84,6 +84,15 @@ func TestStream(t *testing.T) {
 		got := utils.AsStream[int](arr).Sort(func(a, b int) bool { return a < b }).ToSlice()
 		want := []int{1, 2, 3, 4, 5}
 		if !reflect.DeepEqual(got, want) {
+			t.Errorf("got %v, want %v", got, want)
+		}
+	})
+
+	t.Run("Contains", func(t *testing.T) {
+		arr := []int{1, 2, 3, 4, 5}
+		got := utils.AsStream[int](arr).Contains(3)
+		want := true
+		if got != want {
 			t.Errorf("got %v, want %v", got, want)
 		}
 	})

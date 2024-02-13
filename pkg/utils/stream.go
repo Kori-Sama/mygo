@@ -1,6 +1,9 @@
 package utils
 
-import "sort"
+import (
+	"reflect"
+	"sort"
+)
 
 type Stream[T any] struct {
 	data []T
@@ -50,6 +53,17 @@ func (s *Stream[T]) Take(n int) *Stream[T] {
 	return s
 }
 
+func (s *Stream[T]) Skip(n int) *Stream[T] {
+	opt := func(s *Stream[T]) {
+		if n < len(s.data) {
+			s.data = s.data[n:]
+		}
+	}
+	s.opts = append(s.opts, opt)
+	return s
+
+}
+
 func (s *Stream[T]) Sort(predicate func(T, T) bool) *Stream[T] {
 	opt := func(s *Stream[T]) {
 		sort.Slice(s.data, func(i, j int) bool {
@@ -59,6 +73,32 @@ func (s *Stream[T]) Sort(predicate func(T, T) bool) *Stream[T] {
 	s.opts = append(s.opts, opt)
 	return s
 }
+
+func (s *Stream[T]) Reverse() *Stream[T] {
+	opt := func(s *Stream[T]) {
+		for i, j := 0, len(s.data)-1; i < j; i, j = i+1, j-1 {
+			s.data[i], s.data[j] = s.data[j], s.data[i]
+		}
+	}
+	s.opts = append(s.opts, opt)
+	return s
+}
+
+// func (s *Stream[T]) Distinct() *Stream[T] {
+// 	opt := func(s *Stream[T]) {
+// 		m := make(map[T]bool)
+// 		for _, v := range s.data {
+// 			m[v] = true
+// 		}
+// 		var result []T
+// 		for k := range m {
+// 			result = append(result, k)
+// 		}
+// 		s.data = result
+// 	}
+// 	s.opts = append(s.opts, opt)
+// 	return s
+// }
 
 func (s *Stream[T]) ForEach(action func(T)) {
 	s.consume()
@@ -84,6 +124,42 @@ func (s *Stream[T]) Find(predicate func(T) bool) *T {
 		}
 	}
 	return nil
+}
+
+func (s *Stream[T]) Count(val T) int {
+	s.consume()
+	var count int
+	for _, v := range s.data {
+		if reflect.DeepEqual(v, val) {
+			count++
+		}
+	}
+	return count
+}
+
+func (s *Stream[T]) Contains(val T) bool {
+	s.consume()
+	for _, v := range s.data {
+		if reflect.DeepEqual(v, val) {
+			return true
+		}
+	}
+	return false
+}
+
+func (s *Stream[T]) All(predicate func(T) bool) bool {
+	s.consume()
+	for _, v := range s.data {
+		if !predicate(v) {
+			return false
+		}
+	}
+	return true
+}
+
+func (s *Stream[T]) IsEmpty() bool {
+	s.consume()
+	return len(s.data) == 0
 }
 
 func (s *Stream[T]) consume() {
