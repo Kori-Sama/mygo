@@ -2,13 +2,15 @@ package model
 
 import (
 	"mygo/pkg/common"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type User struct {
 	Id         int    `xorm:"pk autoincr notnull unique 'id'"`
 	Name       string `xorm:"varchar(200) notnull unique"`
 	Age        int    `xorm:"int"`
-	Password   string `xorm:"varchar(200) notnull"`
+	Password   string `xorm:"varchar(32) notnull"`
 	Wallet     string `xorm:"varchar(200)"`
 	Passphrase string `xorm:"varchar(200)"`
 }
@@ -20,6 +22,8 @@ func CreateUser(name, password string) (int, error) {
 	}
 	_, err := engine.Insert(&user)
 	if err != nil {
+		log.Debug("Pwd len:", len(password))
+		log.Error("CreateUser error: ", err)
 		return 0, common.ErrorOperateDatabase
 	}
 	return user.Id, nil
