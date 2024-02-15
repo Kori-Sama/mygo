@@ -44,15 +44,19 @@ func Transfer(fromAddress, passphrase, toAddress string, amount *big.Int) error 
 		return err
 	}
 	defer conn.Close()
+
 	ks := keystore.NewKeyStore(config.Blockchain.KeystorePath, keystore.LightScryptN, keystore.LightScryptP)
+
 	fromAccount, err := ks.Find(accounts.Account{Address: common.HexToAddress(fromAddress)})
 	if err != nil {
 		return fmt.Errorf("failed to find account: %v", err)
 	}
+
 	err = ks.Unlock(fromAccount, passphrase)
 	if err != nil {
 		return fmt.Errorf("failed to unlock account: %v", err)
 	}
+
 	auth, err := bind.NewKeyStoreTransactorWithChainID(ks, fromAccount, chainID)
 	if err != nil {
 		return fmt.Errorf("failed to create authorized transactor: %v", err)
@@ -62,6 +66,7 @@ func Transfer(fromAddress, passphrase, toAddress string, amount *big.Int) error 
 	if err != nil {
 		return fmt.Errorf("failed to send transaction: %v", err)
 	}
+
 	log.Infof("Transfer successfully. Transaction hash: %s", tx.Hash().Hex())
 	return nil
 }
@@ -111,7 +116,7 @@ func Decimal() (*big.Int, error) {
 // Todo! fixing the "invalid sender" error
 func SendTransaction(cl *ethclient.Client, toStr string) error {
 	const SK = "8443ff36077d13716c4643fbd24a2c166563953f2e9bd07a4ae5473f6327b799"
-	const ADDR = "0xbdf642bf296be98aa36b637e3b97b66014d12213"
+	const ADDR = "0x81a00791ad9052cd2eb51f81ed2c9bc5ef8c662f"
 	var (
 		sk       = crypto.ToECDSAUnsafe(common.FromHex(SK))
 		to       = common.HexToAddress(toStr)
@@ -119,32 +124,27 @@ func SendTransaction(cl *ethclient.Client, toStr string) error {
 		sender   = common.HexToAddress(ADDR)
 		gasLimit = uint64(1000000000)
 	)
-	chainid, err := cl.ChainID(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to get chain id: %v", err)
-	}
+	// chainid, err := cl.ChainID(context.Background())
+	// if err != nil {
+	// 	return fmt.Errorf("failed to get chain id: %v", err)
+	// }
 
-	nonce, err := cl.PendingNonceAt(context.Background(), sender)
+	nonce, err := cl.NonceAt(context.Background(), sender, nil)
 	if err != nil {
 		return fmt.Errorf("failed to get nonce: %v", err)
 	}
 
-	tipCap, _ := cl.SuggestGasTipCap(context.Background())
-	feeCap, _ := cl.SuggestGasPrice(context.Background())
-
 	tx := types.NewTx(
-		&types.DynamicFeeTx{
-			ChainID:   chainid,
-			Nonce:     nonce,
-			GasTipCap: tipCap,
-			GasFeeCap: feeCap,
-			Gas:       gasLimit,
-			To:        &to,
-			Value:     value,
-			Data:      nil,
+		&types.LegacyTx{
+			Nonce:    nonce,
+			GasPrice: big.NewInt(1),
+			Gas:      gasLimit,
+			To:       &to,
+			Value:    value,
+			Data:     nil,
 		})
 
-	signedTx, err := types.SignTx(tx, types.NewLondonSigner(chainid), sk)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(big.NewInt(88)), sk)
 	if err != nil {
 		return fmt.Errorf("failed to sign transaction: %v", err)
 	}
