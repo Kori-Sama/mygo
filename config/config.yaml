@@ -1,6 +1,7 @@
 server:
   port: 8888
   mode: debug
+  salt: "MyGO!!!!!"
 
 database:
   host: localhost
@@ -26,7 +27,7 @@ jwt:
   secret: "MyGO!!!!! is a bang team with five girls, Anno, Tomori, Soyo, Taki and Rena"
 
 blockchain:
-  gethClient: "http://localhost:8545"
+  gethClient: "http://172.18.0.50:8545"
   keystorePath: "/home/kori/blockchain/data/keystore"
   contractAddress: "0x81aB3bcfA5afA7d2469c4002B0422834d2D45319"
   ownerPassword: "123"

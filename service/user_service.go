@@ -3,6 +3,7 @@ package service
 import (
 	"mygo/model"
 	"mygo/pkg/common"
+	"mygo/pkg/utils"
 )
 
 func Login(username string, password string) (int, error) {
@@ -15,7 +16,7 @@ func Login(username string, password string) (int, error) {
 		return 0, err
 	}
 
-	if user.Password != password {
+	if !utils.CmpPwd(user.Password, password) {
 		return 0, common.ErrorWrongPassword
 	}
 
@@ -30,6 +31,6 @@ func Register(username string, password string) (int, error) {
 	if _, err := model.GetUserByName(username); err == nil {
 		return 0, common.ErrorRepeatUsername
 	}
-
-	return model.CreateUser(username, password)
+	encryptedPwd := utils.Encrypt(password)
+	return model.CreateUser(username, encryptedPwd)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func TestBlockchain(t *testing.T) {
-	conn, err := ethclient.Dial("http://localhost:8545")
+	conn, err := ethclient.Dial("http://172.18.0.50:8545")
 	if err != nil {
 		t.Error(err)
 	}
