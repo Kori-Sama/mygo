@@ -6,24 +6,24 @@ import (
 	"mygo/pkg/utils"
 )
 
-func Login(username string, password string) (int, error) {
+func Login(username string, password string) (int, string, error) {
 	if username == "" || password == "" {
-		return 0, common.ErrorEmpty
+		return 0, "", common.ErrorEmpty
 	}
 
 	user, err := model.GetUserByName(username)
 	if err != nil {
-		return 0, err
+		return 0, "", err
 	}
 
 	if !utils.CmpPwd(user.Password, password) {
-		return 0, common.ErrorWrongPassword
+		return 0, "", common.ErrorWrongPassword
 	}
 
-	return user.Id, nil
+	return user.Id, user.Role, nil
 }
 
-func Register(username string, password string) (int, error) {
+func Register(username string, password string, role string) (int, error) {
 	if username == "" || password == "" {
 		return 0, common.ErrorEmpty
 	}
@@ -32,5 +32,5 @@ func Register(username string, password string) (int, error) {
 		return 0, common.ErrorRepeatUsername
 	}
 	encryptedPwd := utils.Encrypt(password)
-	return model.CreateUser(username, encryptedPwd)
+	return model.CreateUser(username, encryptedPwd, role)
 }

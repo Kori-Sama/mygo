@@ -27,7 +27,7 @@ func main() {
 	config.InitLog()
 
 	model.InitEngine()
-	model.SyncTables()
+	// model.SyncTables()
 
 	gin.SetMode(config.Server.Mode)
 

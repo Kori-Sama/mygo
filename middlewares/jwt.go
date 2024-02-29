@@ -37,7 +37,7 @@ func JwtAuth() gin.HandlerFunc {
 		}
 
 		if duration < time.Duration(config.Jwt.RefreshExpire)*time.Minute {
-			newToken, err := utils.GenerateToken(claims.Id, claims.Name)
+			newToken, err := utils.GenerateToken(claims.Id, claims.Name, claims.Role)
 			if err != nil {
 				ctx.AbortWithStatusJSON(403, common.InternalError(err.Error()))
 				return
@@ -46,7 +46,7 @@ func JwtAuth() gin.HandlerFunc {
 			ctx.Header(constants.TOKEN_NAME, constants.TOKEN_PREFIX+newToken)
 		}
 
-		ctx.Set(constants.LOGIN_USER, common.LoginUser{Id: claims.Id, Name: claims.Name})
+		ctx.Set(constants.LOGIN_USER, common.LoginUser{Id: claims.Id, Name: claims.Name, Role: claims.Role})
 
 		ctx.Next()
 	}

@@ -9,18 +9,28 @@ import (
 type User struct {
 	Id         int    `xorm:"pk autoincr notnull unique 'id'"`
 	Name       string `xorm:"varchar(200) notnull unique"`
-	Age        int    `xorm:"int"`
 	Password   string `xorm:"varchar(32) notnull"`
+	Role       string `xorm:"notnull"`
+	Age        int    `xorm:"int"`
 	Wallet     string `xorm:"varchar(200)"`
 	Passphrase string `xorm:"varchar(200)"`
 }
 
-func CreateUser(name, password string) (int, error) {
+const (
+	RoleOld       = "Old"
+	RoleVolunteer = "Volunteer"
+	RoleAdmin     = "Admin"
+)
+
+var session = engine.Table("users")
+
+func CreateUser(name, password string, role string) (int, error) {
 	user := User{
 		Name:     name,
 		Password: password,
+		Role:     role,
 	}
-	_, err := engine.Insert(&user)
+	_, err := session.Insert(&user)
 	if err != nil {
 		log.Debug("Pwd len:", len(password))
 		log.Error("CreateUser error: ", err)
@@ -31,7 +41,7 @@ func CreateUser(name, password string) (int, error) {
 
 func GetUserById(id int) (*User, error) {
 	user := &User{}
-	_, err := engine.ID(id).Get(user)
+	_, err := session.ID(id).Get(user)
 	if err != nil {
 		return nil, common.ErrorOperateDatabase
 	}
@@ -40,7 +50,7 @@ func GetUserById(id int) (*User, error) {
 
 func GetUserByName(name string) (*User, error) {
 	user := &User{}
-	isFind, err := engine.Where("name = ?", name).Get(user)
+	isFind, err := session.Where("name = ?", name).Get(user)
 	if err != nil {
 		return nil, common.ErrorOperateDatabase
 	}
@@ -51,7 +61,7 @@ func GetUserByName(name string) (*User, error) {
 }
 
 func (u *User) UpdateUser() error {
-	_, err := engine.ID(u.Id).Update(u)
+	_, err := session.ID(u.Id).Update(u)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}
@@ -60,7 +70,7 @@ func (u *User) UpdateUser() error {
 
 func (u *User) UpdatePassword(password string) error {
 	u.Password = password
-	_, err := engine.ID(u.Id).Cols("password").Update(u)
+	_, err := session.ID(u.Id).Cols("password").Update(u)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}

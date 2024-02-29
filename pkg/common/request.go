@@ -14,6 +14,7 @@ type LoginRequest struct {
 type RegisterRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+	Role     string `json:"role"`
 }
 
 // This type is user's login information stored in the context of gin.
@@ -21,4 +22,5 @@ type RegisterRequest struct {
 type LoginUser struct {
 	Id   int
 	Name string
+	Role string
 }

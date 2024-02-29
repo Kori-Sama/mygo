@@ -1,5 +1,9 @@
 ## This is a backend server for MyGO!!!!! project
 
+### Front-end
+
+[MyGO-GUI](https://github.com/MyGO-GUI-Project/MyGO-GUI)
+
 ### Setup
 
 Please download go 1.21.6

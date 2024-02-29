@@ -12,15 +12,17 @@ import (
 type JwtClaims struct {
 	Id   int
 	Name string
+	Role string
 	jwt.RegisteredClaims
 }
 
 var secret = []byte(config.Jwt.Secret)
 
-func GenerateToken(id int, name string) (string, error) {
+func GenerateToken(id int, name string, role string) (string, error) {
 	jwtClaims := JwtClaims{
 		id,
 		name,
+		role,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * time.Duration(config.Jwt.TokenExpire))),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),

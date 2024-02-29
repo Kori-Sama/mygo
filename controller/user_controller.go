@@ -25,7 +25,7 @@ func Login(ctx *gin.Context) {
 	}
 	username, password := loginRequest.Username, loginRequest.Password
 
-	id, err := service.Login(username, password)
+	id, role, err := service.Login(username, password)
 	if err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(500, common.InternalError(err.Error()))
@@ -35,7 +35,7 @@ func Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(id, username)
+	token, err := utils.GenerateToken(id, username, role)
 	if err != nil {
 		ctx.JSON(500, common.InternalError(err.Error()))
 		return
@@ -59,9 +59,9 @@ func Register(ctx *gin.Context) {
 		ctx.JSON(400, common.Bad(err.Error()))
 		return
 	}
-	username, password := registerRequest.Username, registerRequest.Password
+	username, password, role := registerRequest.Username, registerRequest.Password, registerRequest.Role
 
-	id, err := service.Register(username, password)
+	id, err := service.Register(username, password, role)
 	if err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(500, common.InternalError(err.Error()))
@@ -71,7 +71,7 @@ func Register(ctx *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(id, username)
+	token, err := utils.GenerateToken(id, username, role)
 	if err != nil {
 		ctx.JSON(500, common.InternalError(err.Error()))
 		return
