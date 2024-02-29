@@ -2,6 +2,7 @@ package model
 
 import (
 	"mygo/pkg/common"
+	"time"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -10,10 +11,12 @@ type User struct {
 	ID         int         `xorm:"pk autoincr 'id'"`
 	Name       string      `xorm:"varchar(200) notnull unique  'name'"`
 	Password   string      `xorm:"varchar(32) notnull 'password'"`
-	Role       common.Role `xorm:"enum('Old','Volunteer','Admin') default 'Old' notnull 'role'"`
+	Role       common.Role `xorm:"enum('Old','Volunteer','Admin') default 'Old' 'role'"`
 	Age        int         `xorm:"int 'age'"`
 	Wallet     string      `xorm:"varchar(200) 'wallet'"`
 	Passphrase string      `xorm:"varchar(200) 'passphrase'"`
+	CreatedAt  time.Time   `xorm:"created 'created_at'"`
+	UpdatedAt  time.Time   `xorm:"updated 'updated_at'"`
 }
 
 func CreateUser(name, password string, role common.Role) (int, error) {

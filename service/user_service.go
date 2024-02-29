@@ -28,6 +28,10 @@ func Register(username string, password string, role common.Role) (int, error) {
 		return 0, common.ErrorEmpty
 	}
 
+	if !utils.CheckRole(role) {
+		return 0, common.ErrorUnknownRole
+	}
+
 	if _, err := model.GetUserByName(username); err == nil {
 		return 0, common.ErrorRepeatUsername
 	}

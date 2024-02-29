@@ -11,16 +11,17 @@ const (
 type Status string
 
 const (
-	Draft     Status = "Draft"
-	Published Status = "Published"
-	Closed    Status = "Closed"
+	StatusDraft     Status = "Draft"
+	StatusPublished Status = "Published"
+	StatusCensoring Status = "Censoring"
+	StatusPassed    Status = "Passed"
 )
 
 type Action string
 
 const (
-	Create  Action = "Create"
-	Edit    Action = "Edit"
-	Delete  Action = "Delete"
-	Respond Action = "Respond"
+	ActionCreate  Action = "Create"
+	ActionEdit    Action = "Edit"
+	ActionDelete  Action = "Delete"
+	ActionRespond Action = "Respond"
 )

@@ -8,6 +8,7 @@ var (
 	ErrorUnknownUserId   = errors.New("unknown user id")
 	ErrorWrongPassword   = errors.New("wrong password")
 	ErrorRepeatUsername  = errors.New("repeat username")
+	ErrorUnknownRole     = errors.New("unknown role, only has 'Old', 'Volunteer', 'Admin'")
 	// blockchain error
 	ErrorNoWallet         = errors.New("user do not have wallet")
 	ErrorBalanceNotEnough = errors.New("balance is not enough")
