@@ -1,7 +1,7 @@
 package test
 
 import (
-	"mygo/pkg/utils"
+	"mygo/internal/pkg/utils"
 	"reflect"
 	"testing"
 )

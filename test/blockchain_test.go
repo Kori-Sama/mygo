@@ -1,7 +1,7 @@
 package test
 
 import (
-	"mygo/blockchain"
+	"mygo/internal/blockchain"
 	"testing"
 
 	"github.com/ethereum/go-ethereum/ethclient"

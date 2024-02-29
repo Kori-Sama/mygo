@@ -2,7 +2,7 @@ package test
 
 import (
 	"mygo/config"
-	"mygo/pkg/utils"
+	"mygo/internal/pkg/utils"
 	"testing"
 )
 
