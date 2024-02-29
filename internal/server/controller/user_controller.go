@@ -1,10 +1,10 @@
 package controller
 
 import (
-	"mygo/internal/mygo/service"
 	"mygo/internal/pkg/common"
 	"mygo/internal/pkg/constants"
 	"mygo/internal/pkg/utils"
+	"mygo/internal/server/service"
 
 	"github.com/gin-gonic/gin"
 )

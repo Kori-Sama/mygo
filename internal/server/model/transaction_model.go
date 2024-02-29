@@ -10,7 +10,7 @@ type Transaction struct {
 	UserID        int           `xorm:"'user_id'"`
 	Title         string        `xorm:"varchar(100) notnull 'title'"`
 	Description   string        `xorm:"text notnull 'description'"`
-	Status        common.Status `xorm:"enum('Draft', 'Published','Censoring','Passed') default 'Draft' 'status'"`
+	Status        common.Status `xorm:"enum('Draft', 'Published','Censoring','Passed','Rejected') default 'Draft' 'status'"`
 	CreatedAt     time.Time     `xorm:"created 'created_at'"`
 	UpdatedAt     time.Time     `xorm:"updated 'updated_at'"`
 }

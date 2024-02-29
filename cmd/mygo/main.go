@@ -3,9 +3,9 @@ package main
 import (
 	"mygo/config"
 	_ "mygo/docs"
-	"mygo/internal/mygo/controller"
-	"mygo/internal/mygo/middlewares"
-	"mygo/internal/mygo/model"
+	"mygo/internal/server/controller"
+	"mygo/internal/server/middlewares"
+	"mygo/internal/server/model"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"

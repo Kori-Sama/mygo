@@ -3,8 +3,8 @@ package service
 import (
 	"math/big"
 	"mygo/internal/blockchain"
-	"mygo/internal/mygo/model"
 	"mygo/internal/pkg/common"
+	"mygo/internal/server/model"
 )
 
 func CreateWallet(id int, passphrase string) error {

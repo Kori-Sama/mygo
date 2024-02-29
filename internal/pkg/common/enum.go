@@ -15,6 +15,7 @@ const (
 	StatusPublished Status = "Published"
 	StatusCensoring Status = "Censoring"
 	StatusPassed    Status = "Passed"
+	StatusRejected  Status = "Rejected"
 )
 
 type Action string

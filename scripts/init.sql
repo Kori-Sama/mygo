@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS transaction (
     user_id INT,
     title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
-    status ENUM('Draft', 'Published', 'Censoring', 'Passed') DEFAULT 'Draft',
+    status ENUM('Draft', 'Published', 'Censoring', 'Passed','Rejected') DEFAULT 'Draft',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id)

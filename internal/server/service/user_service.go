@@ -1,9 +1,9 @@
 package service
 
 import (
-	"mygo/internal/mygo/model"
 	"mygo/internal/pkg/common"
 	"mygo/internal/pkg/utils"
+	"mygo/internal/server/model"
 )
 
 func Login(username string, password string) (int, common.Role, error) {
