@@ -7,41 +7,33 @@ import (
 )
 
 type User struct {
-	Id         int    `xorm:"pk autoincr notnull unique 'id'"`
-	Name       string `xorm:"varchar(200) notnull unique"`
-	Password   string `xorm:"varchar(32) notnull"`
-	Role       string `xorm:"notnull"`
-	Age        int    `xorm:"int"`
-	Wallet     string `xorm:"varchar(200)"`
-	Passphrase string `xorm:"varchar(200)"`
+	ID         int         `xorm:"pk autoincr 'id'"`
+	Name       string      `xorm:"varchar(200) notnull unique  'name'"`
+	Password   string      `xorm:"varchar(32) notnull 'password'"`
+	Role       common.Role `xorm:"enum('Old','Volunteer','Admin') default 'Old' notnull 'role'"`
+	Age        int         `xorm:"int 'age'"`
+	Wallet     string      `xorm:"varchar(200) 'wallet'"`
+	Passphrase string      `xorm:"varchar(200) 'passphrase'"`
 }
 
-const (
-	RoleOld       = "Old"
-	RoleVolunteer = "Volunteer"
-	RoleAdmin     = "Admin"
-)
-
-var session = engine.Table("users")
-
-func CreateUser(name, password string, role string) (int, error) {
+func CreateUser(name, password string, role common.Role) (int, error) {
 	user := User{
 		Name:     name,
 		Password: password,
 		Role:     role,
 	}
-	_, err := session.Insert(&user)
+	_, err := engine.Insert(&user)
 	if err != nil {
 		log.Debug("Pwd len:", len(password))
 		log.Error("CreateUser error: ", err)
 		return 0, common.ErrorOperateDatabase
 	}
-	return user.Id, nil
+	return user.ID, nil
 }
 
 func GetUserById(id int) (*User, error) {
 	user := &User{}
-	_, err := session.ID(id).Get(user)
+	_, err := engine.ID(id).Get(user)
 	if err != nil {
 		return nil, common.ErrorOperateDatabase
 	}
@@ -50,7 +42,7 @@ func GetUserById(id int) (*User, error) {
 
 func GetUserByName(name string) (*User, error) {
 	user := &User{}
-	isFind, err := session.Where("name = ?", name).Get(user)
+	isFind, err := engine.Where("name = ?", name).Get(user)
 	if err != nil {
 		return nil, common.ErrorOperateDatabase
 	}
@@ -61,7 +53,7 @@ func GetUserByName(name string) (*User, error) {
 }
 
 func (u *User) UpdateUser() error {
-	_, err := session.ID(u.Id).Update(u)
+	_, err := engine.ID(u.ID).Update(u)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}
@@ -70,7 +62,7 @@ func (u *User) UpdateUser() error {
 
 func (u *User) UpdatePassword(password string) error {
 	u.Password = password
-	_, err := session.ID(u.Id).Cols("password").Update(u)
+	_, err := engine.ID(u.ID).Cols("password").Update(u)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}
@@ -79,7 +71,7 @@ func (u *User) UpdatePassword(password string) error {
 
 func (u *User) UpdateWallet(wallet string) error {
 	u.Wallet = wallet
-	_, err := engine.ID(u.Id).Cols("wallet").Update(u)
+	_, err := engine.ID(u.ID).Cols("wallet").Update(u)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}
@@ -88,7 +80,7 @@ func (u *User) UpdateWallet(wallet string) error {
 
 func (u *User) UpdatePassphrase(passphrase string) error {
 	u.Passphrase = passphrase
-	_, err := engine.ID(u.Id).Cols("passphrase").Update(u)
+	_, err := engine.ID(u.ID).Cols("passphrase").Update(u)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}

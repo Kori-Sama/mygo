@@ -29,10 +29,10 @@ func InitEngine() {
 	log.Infof("Succeed to connect to database %s", config.Database.DbName)
 }
 
-// func SyncTables() {
-// 	err := engine.Sync2(new(User))
-// 	if err != nil {
-// 		log.Warnf("Failed to sync database: %s", err)
-// 	}
-// 	log.Infof("Succeed to sync the tables of database %s", config.Database.DbName)
-// }
+func SyncTables() {
+	err := engine.Sync2(new(User), new(Transaction), new(History))
+	if err != nil {
+		log.Warnf("Failed to sync database: %s", err)
+	}
+	log.Infof("Succeed to sync the tables of database %s", config.Database.DbName)
+}

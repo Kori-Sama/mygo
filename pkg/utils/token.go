@@ -10,15 +10,15 @@ import (
 )
 
 type JwtClaims struct {
-	Id   int
+	ID   int
 	Name string
-	Role string
+	Role common.Role
 	jwt.RegisteredClaims
 }
 
 var secret = []byte(config.Jwt.Secret)
 
-func GenerateToken(id int, name string, role string) (string, error) {
+func GenerateToken(id int, name string, role common.Role) (string, error) {
 	jwtClaims := JwtClaims{
 		id,
 		name,

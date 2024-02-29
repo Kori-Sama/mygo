@@ -6,7 +6,7 @@ import (
 	"mygo/pkg/utils"
 )
 
-func Login(username string, password string) (int, string, error) {
+func Login(username string, password string) (int, common.Role, error) {
 	if username == "" || password == "" {
 		return 0, "", common.ErrorEmpty
 	}
@@ -20,10 +20,10 @@ func Login(username string, password string) (int, string, error) {
 		return 0, "", common.ErrorWrongPassword
 	}
 
-	return user.Id, user.Role, nil
+	return user.ID, user.Role, nil
 }
 
-func Register(username string, password string, role string) (int, error) {
+func Register(username string, password string, role common.Role) (int, error) {
 	if username == "" || password == "" {
 		return 0, common.ErrorEmpty
 	}

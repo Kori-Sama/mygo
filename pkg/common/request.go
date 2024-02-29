@@ -14,13 +14,13 @@ type LoginRequest struct {
 type RegisterRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-	Role     string `json:"role"`
+	Role     Role   `json:"role"`
 }
 
 // This type is user's login information stored in the context of gin.
 // The value comes from JWT token, so we can use it to get user's information.
 type LoginUser struct {
-	Id   int
+	ID   int
 	Name string
-	Role string
+	Role Role
 }

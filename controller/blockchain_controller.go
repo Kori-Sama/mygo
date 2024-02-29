@@ -24,7 +24,7 @@ func CreateWallet(ctx *gin.Context) {
 		return
 	}
 
-	if err := service.CreateWallet(user.Id, passphrase); err != nil {
+	if err := service.CreateWallet(user.ID, passphrase); err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(500, common.InternalError(err.Error()))
 			return
@@ -49,7 +49,7 @@ func GetBalance(ctx *gin.Context) {
 		return
 	}
 
-	balance, err := service.GetBalance(user.Id)
+	balance, err := service.GetBalance(user.ID)
 	if err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(500, common.InternalError(err.Error()))

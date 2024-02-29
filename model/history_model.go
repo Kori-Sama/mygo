@@ -1,20 +1,14 @@
 package model
 
 import (
+	"mygo/pkg/common"
 	"time"
 )
 
 type History struct {
-	HistoryID     int       `xorm:"pk autoincr 'history_id'"`
-	UserID        int       `xorm:"'user_id'"`
-	TransactionID int       `xorm:"'transaction_id'"`
-	Action        string    `xorm:"'action'"`
-	Timestamp     time.Time `xorm:"'timestamp'"`
+	HistoryID     int           `xorm:"pk autoincr 'history_id'"`
+	UserID        int           `xorm:"FOREIGN KEY (user_id) REFERENCES user(id)"`
+	TransactionID int           `xorm:"FOREIGN KEY (transaction_id) REFERENCES transactions(transaction_id)"`
+	Action        common.Action `xorm:"enum('Create', 'Edit', 'Delete', 'Respond') notnull 'action'"`
+	Timestamp     time.Time     `xorm:"'timestamp'"`
 }
-
-const (
-	Create  = "Create"
-	Edit    = "Edit"
-	Delete  = "Delete"
-	Respond = "Respond"
-)
