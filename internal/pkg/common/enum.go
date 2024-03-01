@@ -12,7 +12,6 @@ type Status string
 
 const (
 	StatusDraft     Status = "Draft"
-	StatusPublished Status = "Published"
 	StatusCensoring Status = "Censoring"
 	StatusPassed    Status = "Passed"
 	StatusRejected  Status = "Rejected"

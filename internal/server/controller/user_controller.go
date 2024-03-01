@@ -20,7 +20,7 @@ import (
 func Login(ctx *gin.Context) {
 	var loginRequest common.LoginRequest
 	if err := ctx.ShouldBindJSON(&loginRequest); err != nil {
-		ctx.JSON(400, common.Bad(err.Error()))
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
 		return
 	}
 	username, password := loginRequest.Username, loginRequest.Password
@@ -28,21 +28,21 @@ func Login(ctx *gin.Context) {
 	id, role, err := service.Login(username, password)
 	if err != nil {
 		if common.CheckInternalError(err) {
-			ctx.JSON(500, common.InternalError(err.Error()))
+			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
 			return
 		}
-		ctx.JSON(400, common.Bad(err.Error()))
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
 		return
 	}
 
 	token, err := utils.GenerateToken(id, username, role)
 	if err != nil {
-		ctx.JSON(500, common.InternalError(err.Error()))
+		ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
 		return
 	}
 
 	ctx.Header(constants.TOKEN_NAME, constants.TOKEN_PREFIX+token)
-	ctx.JSON(200, common.Ok(nil))
+	ctx.JSON(common.OK, common.Ok(nil))
 }
 
 // @Summary		register
@@ -56,7 +56,7 @@ func Login(ctx *gin.Context) {
 func Register(ctx *gin.Context) {
 	var registerRequest common.RegisterRequest
 	if err := ctx.ShouldBindJSON(&registerRequest); err != nil {
-		ctx.JSON(400, common.Bad(err.Error()))
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
 		return
 	}
 	username, password, role := registerRequest.Username, registerRequest.Password, registerRequest.Role
@@ -64,19 +64,19 @@ func Register(ctx *gin.Context) {
 	id, err := service.Register(username, password, role)
 	if err != nil {
 		if common.CheckInternalError(err) {
-			ctx.JSON(500, common.InternalError(err.Error()))
+			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
 			return
 		}
-		ctx.JSON(400, common.Bad(err.Error()))
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
 		return
 	}
 
 	token, err := utils.GenerateToken(id, username, role)
 	if err != nil {
-		ctx.JSON(500, common.InternalError(err.Error()))
+		ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
 		return
 	}
 
 	ctx.Header(constants.TOKEN_NAME, constants.TOKEN_PREFIX+token)
-	ctx.JSON(200, common.Ok(nil))
+	ctx.JSON(common.OK, common.Ok(nil))
 }

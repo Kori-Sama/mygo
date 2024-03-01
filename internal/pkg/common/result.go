@@ -4,6 +4,15 @@ import (
 	"fmt"
 )
 
+const (
+	OK                    = 200
+	BAD_REQUEST           = 400
+	UNAUTHORIZED          = 401
+	FORBIDDEN             = 403
+	NOT_FOUND             = 404
+	INTERNAL_SERVER_ERROR = 500
+)
+
 type Result struct {
 	Code int    `json:"code"`
 	Msg  string `json:"msg"`
@@ -12,7 +21,7 @@ type Result struct {
 
 func Ok(data any) Result {
 	return Result{
-		Code: 200,
+		Code: OK,
 		Msg:  "OK",
 		Data: data,
 	}
@@ -20,7 +29,7 @@ func Ok(data any) Result {
 
 func Bad(msg string) Result {
 	return Result{
-		Code: 400,
+		Code: BAD_REQUEST,
 		Msg:  msg,
 		Data: nil,
 	}
@@ -28,7 +37,7 @@ func Bad(msg string) Result {
 
 func InternalError(msg string) Result {
 	return Result{
-		Code: 500,
+		Code: INTERNAL_SERVER_ERROR,
 		Msg:  msg,
 		Data: nil,
 	}
@@ -36,15 +45,23 @@ func InternalError(msg string) Result {
 
 func NoAuth(msg string) Result {
 	return Result{
-		Code: 403,
+		Code: UNAUTHORIZED,
 		Msg:  fmt.Sprintf("Unauthorized: %s", msg),
+		Data: nil,
+	}
+}
+
+func Forbidden() Result {
+	return Result{
+		Code: FORBIDDEN,
+		Msg:  "Forbidden",
 		Data: nil,
 	}
 }
 
 func NotFound() Result {
 	return Result{
-		Code: 404,
+		Code: NOT_FOUND,
 		Msg:  "Not Found",
 		Data: nil,
 	}

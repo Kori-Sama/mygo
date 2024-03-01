@@ -10,6 +10,8 @@ definitions:
     properties:
       password:
         type: string
+      role:
+        $ref: '#/definitions/common.Role'
       username:
         type: string
     type: object
@@ -21,6 +23,16 @@ definitions:
       msg:
         type: string
     type: object
+  common.Role:
+    enum:
+    - Old
+    - Volunteer
+    - Admin
+    type: string
+    x-enum-varnames:
+    - RoleOld
+    - RoleVolunteer
+    - RoleAdmin
   common.TransferRequest:
     properties:
       amount:

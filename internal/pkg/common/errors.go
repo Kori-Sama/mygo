@@ -3,12 +3,14 @@ package common
 import "errors"
 
 var (
-	ErrorEmpty           = errors.New("empty parameter")
-	ErrorUnknownUsername = errors.New("unknown username")
-	ErrorUnknownUserId   = errors.New("unknown user id")
-	ErrorWrongPassword   = errors.New("wrong password")
-	ErrorRepeatUsername  = errors.New("repeat username")
-	ErrorUnknownRole     = errors.New("unknown role, only has 'Old', 'Volunteer', 'Admin'")
+	ErrorEmpty            = errors.New("empty parameter")
+	ErrorUnknownUsername  = errors.New("unknown username")
+	ErrorUnknownUserId    = errors.New("unknown user id")
+	ErrorWrongPassword    = errors.New("wrong password")
+	ErrorRepeatUsername   = errors.New("repeat username")
+	ErrorUnknownRole      = errors.New("unknown role, only has 'Old', 'Volunteer', 'Admin'")
+	ErrorMatchTransaction = errors.New("user id do not match the transaction's user id")
+	ErrorInvalidParam     = errors.New("invalid parameter")
 	// blockchain error
 	ErrorNoWallet         = errors.New("user do not have wallet")
 	ErrorBalanceNotEnough = errors.New("balance is not enough")

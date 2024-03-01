@@ -189,6 +189,9 @@ const docTemplate = `{
                 "password": {
                     "type": "string"
                 },
+                "role": {
+                    "$ref": "#/definitions/common.Role"
+                },
                 "username": {
                     "type": "string"
                 }
@@ -205,6 +208,19 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "common.Role": {
+            "type": "string",
+            "enum": [
+                "Old",
+                "Volunteer",
+                "Admin"
+            ],
+            "x-enum-varnames": [
+                "RoleOld",
+                "RoleVolunteer",
+                "RoleAdmin"
+            ]
         },
         "common.TransferRequest": {
             "type": "object",

@@ -11,25 +11,20 @@ type Transaction struct {
 	Title         string        `xorm:"varchar(100) notnull 'title'"`
 	Description   string        `xorm:"text notnull 'description'"`
 	Value         int           `xorm:"notnull 'value'"`
-	Status        common.Status `xorm:"enum('Draft', 'Published','Censoring','Passed','Rejected') default 'Draft' 'status'"`
+	Status        common.Status `xorm:"enum('Draft','Censoring','Passed','Rejected') default 'Draft' 'status'"`
 	CreatedAt     time.Time     `xorm:"created 'created_at'"`
 	UpdatedAt     time.Time     `xorm:"updated 'updated_at'"`
 }
 
-func CreateTransaction(userID int, title, description string, value int, status common.Status) (int, error) {
-	_, err := GetUserById(userID)
-	if err != nil {
-		return 0, err
-	}
-
+func CreateTransaction(userID int, t common.NewTransactionRequest, status common.Status) (int, error) {
 	transaction := Transaction{
 		UserID:      userID,
-		Title:       title,
-		Description: description,
-		Value:       value,
+		Title:       t.Title,
+		Description: t.Description,
+		Value:       t.Value,
 		Status:      status,
 	}
-	_, err = engine.Insert(&transaction)
+	_, err := engine.Insert(&transaction)
 	if err != nil {
 		return 0, common.ErrorOperateDatabase
 	}
@@ -45,17 +40,23 @@ func GetTransactionById(id int) (*Transaction, error) {
 	return transaction, nil
 }
 
-func (t *Transaction) UpdateTransaction() error {
-	_, err := GetUserById(t.UserID)
-	if err != nil {
-		return err
-	}
-
-	_, err = engine.ID(t.TransactionID).Update(t)
+func (t *Transaction) Update() error {
+	_, err := engine.ID(t.TransactionID).Update(t)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}
 	return nil
+}
+
+func UpdateTransaction(id int, t common.TransactionRequest, status common.Status) error {
+	transaction := &Transaction{
+		TransactionID: id,
+		Title:         t.Title,
+		Description:   t.Description,
+		Value:         t.Value,
+		Status:        status,
+	}
+	return transaction.Update()
 }
 
 func GetTransactionsByUserID(userID int) ([]*Transaction, error) {
