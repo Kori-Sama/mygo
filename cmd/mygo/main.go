@@ -48,8 +48,9 @@ func main() {
 
 	t := auth.Group("/transaction")
 	{
-		t.GET("/", controller.GetTransactions)
+		t.GET("/", controller.GetAllTransactions)
 		t.GET("/:id", controller.GetTransaction)
+		t.GET("/self", controller.GetOwnTransactions)
 		t.GET("/by", controller.GetTransactionByStatus)
 		t.POST("/new", controller.NewTransaction)
 		t.POST("/save", controller.SaveTransaction)

@@ -27,7 +27,7 @@ type databaseConfig struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	DbName   string `yaml:"dbName"`
-	Charset  string `yaml:"charset"`
+	SSL      string `yaml:"ssl"`
 }
 
 type blockchainConfig struct {

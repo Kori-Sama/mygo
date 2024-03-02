@@ -138,7 +138,7 @@ const docTemplate = `{
         },
         "/api/transaction": {
             "get": {
-                "description": "get all transactions",
+                "description": "get all transactions, admins can see all transactions, users can only see passed transactions",
                 "consumes": [
                     "application/json"
                 ],
@@ -164,7 +164,7 @@ const docTemplate = `{
         },
         "/api/transaction/by": {
             "get": {
-                "description": "get transactions by status",
+                "description": "get transactions by status, only admins have permission to access other statuses except passed",
                 "consumes": [
                     "application/json"
                 ],
@@ -298,9 +298,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/transaction/self": {
+            "get": {
+                "description": "get transactions of login user",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "get self transactions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/common.TransactionResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/transaction/{id}": {
             "get": {
-                "description": "get single transaction by id",
+                "description": "get single transaction by id, only allowed for admins",
                 "consumes": [
                     "application/json"
                 ],

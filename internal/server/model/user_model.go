@@ -8,13 +8,13 @@ import (
 )
 
 type User struct {
-	ID         int         `xorm:"pk autoincr 'id'"`
-	Name       string      `xorm:"varchar(200) notnull unique  'name'"`
+	ID         int         `xorm:"pk uuid DEFAULT gen_random_uuid() 'id'"`
+	Name       string      `xorm:"varchar notnull unique  'name'"`
 	Password   string      `xorm:"varchar(32) notnull 'password'"`
-	Role       common.Role `xorm:"enum('Old','Volunteer','Admin') default 'Old' 'role'"`
+	Role       common.Role `xorm:"type:role 'role'"`
 	Age        int         `xorm:"int 'age'"`
-	Wallet     string      `xorm:"varchar(200) 'wallet'"`
-	Passphrase string      `xorm:"varchar(200) 'passphrase'"`
+	Wallet     string      `xorm:"varchar 'wallet'"`
+	Passphrase string      `xorm:"varchar 'passphrase'"`
 	CreatedAt  time.Time   `xorm:"created 'created_at'"`
 	UpdatedAt  time.Time   `xorm:"updated 'updated_at'"`
 }

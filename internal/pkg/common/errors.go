@@ -11,6 +11,7 @@ var (
 	ErrorUnknownRole      = errors.New("unknown role, only has 'Old', 'Volunteer', 'Admin'")
 	ErrorMatchTransaction = errors.New("user id do not match the transaction's user id")
 	ErrorInvalidParam     = errors.New("invalid parameter")
+	ErrorNoPermission     = errors.New("no permission")
 	// blockchain error
 	ErrorNoWallet         = errors.New("user do not have wallet")
 	ErrorBalanceNotEnough = errors.New("balance is not enough")

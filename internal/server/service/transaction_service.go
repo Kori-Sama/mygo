@@ -5,14 +5,24 @@ import (
 	"mygo/internal/server/model"
 )
 
-func GetTransaction(userID, transactionID int) (*common.TransactionResponse, error) {
+func SearchTransactions(search string) ([]common.TransactionResponse, error) {
+	transactions, err := model.GetPassedTransactions()
+	if err != nil {
+		return nil, err
+	}
+	var res []common.TransactionResponse
+
+	// TODO 👀
+
+	return res, nil
+}
+
+func GetTransaction(transactionID int) (*common.TransactionResponse, error) {
 	t, err := model.GetTransactionById(transactionID)
 	if err != nil {
 		return nil, err
 	}
-	if t.UserID != userID {
-		return nil, common.ErrorMatchTransaction
-	}
+
 	return &common.TransactionResponse{
 		ID:          t.TransactionID,
 		Title:       t.Title,
@@ -24,7 +34,7 @@ func GetTransaction(userID, transactionID int) (*common.TransactionResponse, err
 	}, nil
 }
 
-func GetTransactions(userID int) ([]common.TransactionResponse, error) {
+func GetTransactionsByUserID(userID int) ([]common.TransactionResponse, error) {
 	transactions, err := model.GetTransactionsByUserID(userID)
 	if err != nil {
 		return nil, err
@@ -44,8 +54,35 @@ func GetTransactions(userID int) ([]common.TransactionResponse, error) {
 	return res, nil
 }
 
-func GetTransactionByStatus(userID int, status common.Status) ([]common.TransactionResponse, error) {
-	transactions, err := model.GetTransactionsByUserIDAndStatus(userID, status)
+func GetTransactions(role common.Role) ([]common.TransactionResponse, error) {
+	var transactions []*model.Transaction
+	var err error
+	if role == common.RoleAdmin {
+		transactions, err = model.GetAllTransactions()
+	} else {
+		transactions, err = model.GetPassedTransactions()
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	var res []common.TransactionResponse
+	for _, t := range transactions {
+		res = append(res, common.TransactionResponse{
+			ID:          t.TransactionID,
+			Title:       t.Title,
+			Description: t.Description,
+			Value:       t.Value,
+			Status:      t.Status,
+			CreatedAt:   t.CreatedAt.Second(),
+			UpdatedAt:   t.UpdatedAt.Second(),
+		})
+	}
+	return res, nil
+}
+
+func GetTransactionByStatus(status common.Status) ([]common.TransactionResponse, error) {
+	transactions, err := model.GetTransactionsByStatus(status)
 	if err != nil {
 		return nil, err
 	}

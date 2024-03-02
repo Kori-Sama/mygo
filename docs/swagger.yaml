@@ -152,7 +152,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: get all transactions
+      description: get all transactions, admins can see all transactions, users can
+        only see passed transactions
       produces:
       - application/json
       responses:
@@ -169,7 +170,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: get single transaction by id
+      description: get single transaction by id, only allowed for admins
       parameters:
       - description: Transaction ID
         in: path
@@ -190,7 +191,8 @@ paths:
     get:
       consumes:
       - application/json
-      description: get transactions by status
+      description: get transactions by status, only admins have permission to access
+        other statuses except passed
       parameters:
       - description: transaction status
         in: query
@@ -273,6 +275,23 @@ paths:
           schema:
             $ref: '#/definitions/common.Result'
       summary: Save a transaction
+      tags:
+      - transaction
+  /api/transaction/self:
+    get:
+      consumes:
+      - application/json
+      description: get transactions of login user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.TransactionResponse'
+            type: array
+      summary: get self transactions
       tags:
       - transaction
 swagger: "2.0"

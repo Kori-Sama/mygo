@@ -5,11 +5,11 @@ server:
 
 database:
   host: localhost
-  port: 3307
-  username: root
+  port: 5432
+  username: kori
   password: 123456
   dbName: mygo
-  charset: utf8
+  ssl: disable
 
 log:
   level: debug # Our server logs have five levels: fatal, error, warn, info, debug. When server mode is set as release, log level will be set with warn level automatically if this level is set lower than warn.

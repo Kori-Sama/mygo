@@ -6,12 +6,12 @@ import (
 )
 
 type Transaction struct {
-	TransactionID int           `xorm:"pk autoincr 'transaction_id'"`
+	TransactionID int           `xorm:"pk uuid DEFAULT gen_random_uuid() 'transaction_id'"`
 	UserID        int           `xorm:"'user_id'"`
 	Title         string        `xorm:"varchar(100) notnull 'title'"`
 	Description   string        `xorm:"text notnull 'description'"`
 	Value         int           `xorm:"notnull 'value'"`
-	Status        common.Status `xorm:"enum('Draft','Censoring','Passed','Rejected') default 'Draft' 'status'"`
+	Status        common.Status `xorm:"type:status 'status'"`
 	CreatedAt     time.Time     `xorm:"created 'created_at'"`
 	UpdatedAt     time.Time     `xorm:"updated 'updated_at'"`
 }
@@ -80,6 +80,24 @@ func GetTransactionsByStatus(status common.Status) ([]*Transaction, error) {
 func GetTransactionsByUserIDAndStatus(userID int, status common.Status) ([]*Transaction, error) {
 	transactions := make([]*Transaction, 0)
 	err := engine.Where("user_id = ? and status = ?", userID, status).Find(&transactions)
+	if err != nil {
+		return nil, common.ErrorOperateDatabase
+	}
+	return transactions, nil
+}
+
+func GetAllTransactions() ([]*Transaction, error) {
+	transactions := make([]*Transaction, 0)
+	err := engine.Find(&transactions)
+	if err != nil {
+		return nil, common.ErrorOperateDatabase
+	}
+	return transactions, nil
+}
+
+func GetPassedTransactions() ([]*Transaction, error) {
+	transactions := make([]*Transaction, 0)
+	err := engine.Where("status = ?", common.StatusPassed).Find(&transactions)
 	if err != nil {
 		return nil, common.ErrorOperateDatabase
 	}

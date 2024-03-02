@@ -51,10 +51,10 @@ func NoAuth(msg string) Result {
 	}
 }
 
-func Forbidden() Result {
+func Forbidden(msg string) Result {
 	return Result{
 		Code: FORBIDDEN,
-		Msg:  "Forbidden",
+		Msg:  fmt.Sprintf("forbidden: %s", msg),
 		Data: nil,
 	}
 }
