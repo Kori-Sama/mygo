@@ -9,3 +9,18 @@ func CheckRole(role common.Role) bool {
 	}
 	return false
 }
+
+func FilterStatus(status string) (common.Status, error) {
+	switch status {
+	case "draft":
+		return common.StatusDraft, nil
+	case "censoring":
+		return common.StatusCensoring, nil
+	case "passed":
+		return common.StatusPassed, nil
+	case "rejected":
+		return common.StatusRejected, nil
+	default:
+		return "", common.ErrorInvalidParam
+	}
+}

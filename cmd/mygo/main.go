@@ -43,7 +43,18 @@ func main() {
 	{
 		bc.POST("/createWallet/:passphrase", controller.CreateWallet)
 		bc.GET("/getBalance", controller.GetBalance)
-		bc.POST("/transfer", controller.Transfer)
+		// bc.POST("/transfer", controller.Transfer)
+	}
+
+	t := auth.Group("/transaction")
+	{
+		t.GET("/", controller.GetTransactions)
+		t.GET("/:id", controller.GetTransaction)
+		t.GET("/by", controller.GetTransactionByStatus)
+		t.POST("/new", controller.NewTransaction)
+		t.POST("/save", controller.SaveTransaction)
+		t.POST("/publish", controller.PublishTransaction)
+		t.POST("/delete", controller.DeleteTransaction)
 	}
 
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

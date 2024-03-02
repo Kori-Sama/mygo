@@ -6,26 +6,46 @@ import (
 )
 
 func GetTransaction(userID, transactionID int) (*common.TransactionResponse, error) {
-	transaction, err := model.GetTransactionById(transactionID)
+	t, err := model.GetTransactionById(transactionID)
 	if err != nil {
 		return nil, err
 	}
-	if transaction.UserID != userID {
+	if t.UserID != userID {
 		return nil, common.ErrorMatchTransaction
 	}
 	return &common.TransactionResponse{
-		ID:          transaction.TransactionID,
-		Title:       transaction.Title,
-		Description: transaction.Description,
-		Value:       transaction.Value,
-		Status:      transaction.Status,
-		CreatedAt:   transaction.CreatedAt.Second(),
-		UpdatedAt:   transaction.UpdatedAt.Second(),
+		ID:          t.TransactionID,
+		Title:       t.Title,
+		Description: t.Description,
+		Value:       t.Value,
+		Status:      t.Status,
+		CreatedAt:   t.CreatedAt.Second(),
+		UpdatedAt:   t.UpdatedAt.Second(),
 	}, nil
 }
 
 func GetTransactions(userID int) ([]common.TransactionResponse, error) {
 	transactions, err := model.GetTransactionsByUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+	var res []common.TransactionResponse
+	for _, t := range transactions {
+		res = append(res, common.TransactionResponse{
+			ID:          t.TransactionID,
+			Title:       t.Title,
+			Description: t.Description,
+			Value:       t.Value,
+			Status:      t.Status,
+			CreatedAt:   t.CreatedAt.Second(),
+			UpdatedAt:   t.UpdatedAt.Second(),
+		})
+	}
+	return res, nil
+}
+
+func GetTransactionByStatus(userID int, status common.Status) ([]common.TransactionResponse, error) {
+	transactions, err := model.GetTransactionsByUserIDAndStatus(userID, status)
 	if err != nil {
 		return nil, err
 	}
@@ -74,4 +94,15 @@ func updateTransaction(userID int, transaction common.TransactionRequest, status
 		return err
 	}
 	return nil
+}
+
+func DeleteTransaction(userID, transactionID int) error {
+	t, err := model.GetTransactionById(transactionID)
+	if err != nil {
+		return err
+	}
+	if t.UserID != userID {
+		return common.ErrorMatchTransaction
+	}
+	return model.DeleteTransaction(transactionID)
 }

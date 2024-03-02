@@ -68,40 +68,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/blockchain/transfer": {
-            "post": {
-                "description": "transfer funds from one wallet to another",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "blockchain"
-                ],
-                "summary": "transfer funds",
-                "parameters": [
-                    {
-                        "description": "transfer request json",
-                        "name": "transfer",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/common.TransferRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/common.Result"
-                        }
-                    }
-                }
-            }
-        },
         "/api/login": {
             "post": {
                 "description": "login",
@@ -169,6 +135,200 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/transaction": {
+            "get": {
+                "description": "get all transactions",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "get all transactions",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/common.TransactionResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/by": {
+            "get": {
+                "description": "get transactions by status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "get transactions by status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "transaction status",
+                        "name": "status",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/common.TransactionResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/delete/{id}": {
+            "post": {
+                "description": "Delete a transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "Delete a transaction",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/new": {
+            "post": {
+                "description": "Create a new transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "Create a new transaction",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/publish": {
+            "post": {
+                "description": "Publish a transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "Publish a transaction",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/save": {
+            "post": {
+                "description": "Save a transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "Save a transaction",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Result"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/transaction/{id}": {
+            "get": {
+                "description": "get single transaction by id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "get transaction",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.TransactionResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -222,17 +382,44 @@ const docTemplate = `{
                 "RoleAdmin"
             ]
         },
-        "common.TransferRequest": {
+        "common.Status": {
+            "type": "string",
+            "enum": [
+                "Draft",
+                "Censoring",
+                "Passed",
+                "Rejected"
+            ],
+            "x-enum-varnames": [
+                "StatusDraft",
+                "StatusCensoring",
+                "StatusPassed",
+                "StatusRejected"
+            ]
+        },
+        "common.TransactionResponse": {
             "type": "object",
             "properties": {
-                "amount": {
+                "created_at": {
+                    "type": "integer"
+                },
+                "description": {
                     "type": "string"
                 },
-                "passphrase": {
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/common.Status"
+                },
+                "title": {
                     "type": "string"
                 },
-                "toName": {
-                    "type": "string"
+                "updated_at": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "integer"
                 }
             }
         }
