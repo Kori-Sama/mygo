@@ -7,6 +7,7 @@ import (
 	"mygo/internal/server/middlewares"
 	"mygo/internal/server/model"
 	"mygo/internal/server/service"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -28,6 +29,8 @@ func main() {
 
 	model.InitEngine()
 	model.SyncTables()
+
+	service.Seg.LoadDict(strings.Join(config.Server.Dict, ","))
 
 	gin.SetMode(config.Server.Mode)
 
@@ -62,8 +65,6 @@ func main() {
 	}
 
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	service.Seg.LoadDict()
 
 	app.Run(":" + config.Server.Port)
 }

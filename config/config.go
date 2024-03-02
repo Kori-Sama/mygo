@@ -16,9 +16,10 @@ type config struct {
 }
 
 type serverConfig struct {
-	Port string `yaml:"port"`
-	Mode string `yaml:"mode"`
-	Salt string `yaml:"salt"`
+	Port string   `yaml:"port"`
+	Mode string   `yaml:"mode"`
+	Salt string   `yaml:"salt"`
+	Dict []string `yaml:"dict"`
 }
 
 type databaseConfig struct {

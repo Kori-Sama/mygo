@@ -2,6 +2,9 @@ server:
   port: 8888 
   mode: debug
   salt: "MyGO!!!!!"
+  dict:
+    - "/home/kori/go/pkg/mod/github.com/go-ego/gse@v0.80.2/data/dict/zh/s_1.txt"
+    - "/home/kori/go/pkg/mod/github.com/go-ego/gse@v0.80.2/data/dict/zh/t_1.txt" 
 
 database:
   host: localhost
