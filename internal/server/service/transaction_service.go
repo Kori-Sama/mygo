@@ -23,15 +23,7 @@ func GetTransaction(transactionID int) (*common.TransactionResponse, error) {
 		return nil, err
 	}
 
-	return &common.TransactionResponse{
-		ID:          t.TransactionID,
-		Title:       t.Title,
-		Description: t.Description,
-		Value:       t.Value,
-		Status:      t.Status,
-		CreatedAt:   t.CreatedAt.Second(),
-		UpdatedAt:   t.UpdatedAt.Second(),
-	}, nil
+	return t.ToResponse(), nil
 }
 
 func GetTransactionsByUserID(userID int) ([]common.TransactionResponse, error) {
@@ -41,15 +33,7 @@ func GetTransactionsByUserID(userID int) ([]common.TransactionResponse, error) {
 	}
 	var res []common.TransactionResponse
 	for _, t := range transactions {
-		res = append(res, common.TransactionResponse{
-			ID:          t.TransactionID,
-			Title:       t.Title,
-			Description: t.Description,
-			Value:       t.Value,
-			Status:      t.Status,
-			CreatedAt:   t.CreatedAt.Second(),
-			UpdatedAt:   t.UpdatedAt.Second(),
-		})
+		res = append(res, *t.ToResponse())
 	}
 	return res, nil
 }
@@ -68,15 +52,7 @@ func GetTransactions(role common.Role) ([]common.TransactionResponse, error) {
 
 	var res []common.TransactionResponse
 	for _, t := range transactions {
-		res = append(res, common.TransactionResponse{
-			ID:          t.TransactionID,
-			Title:       t.Title,
-			Description: t.Description,
-			Value:       t.Value,
-			Status:      t.Status,
-			CreatedAt:   t.CreatedAt.Second(),
-			UpdatedAt:   t.UpdatedAt.Second(),
-		})
+		res = append(res, *t.ToResponse())
 	}
 	return res, nil
 }
@@ -88,15 +64,7 @@ func GetTransactionByStatus(status common.Status) ([]common.TransactionResponse,
 	}
 	var res []common.TransactionResponse
 	for _, t := range transactions {
-		res = append(res, common.TransactionResponse{
-			ID:          t.TransactionID,
-			Title:       t.Title,
-			Description: t.Description,
-			Value:       t.Value,
-			Status:      t.Status,
-			CreatedAt:   t.CreatedAt.Second(),
-			UpdatedAt:   t.UpdatedAt.Second(),
-		})
+		res = append(res, *t.ToResponse())
 	}
 	return res, nil
 }

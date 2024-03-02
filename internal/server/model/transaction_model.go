@@ -16,6 +16,18 @@ type Transaction struct {
 	UpdatedAt     time.Time     `xorm:"updated 'updated_at'"`
 }
 
+func (t *Transaction) ToResponse() *common.TransactionResponse {
+	return &common.TransactionResponse{
+		ID:          t.TransactionID,
+		Title:       t.Title,
+		Description: t.Description,
+		Value:       t.Value,
+		Status:      t.Status,
+		CreatedAt:   t.CreatedAt.Second(),
+		UpdatedAt:   t.UpdatedAt.Second(),
+	}
+}
+
 func CreateTransaction(userID int, t common.NewTransactionRequest, status common.Status) (int, error) {
 	transaction := Transaction{
 		UserID:      userID,
