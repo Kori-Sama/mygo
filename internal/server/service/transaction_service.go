@@ -111,3 +111,22 @@ func DeleteTransaction(userID, transactionID int) error {
 	}
 	return model.DeleteTransaction(transactionID)
 }
+
+func CensorTransaction(isPassed bool, transactionID int) error {
+	t, err := model.GetTransactionById(transactionID)
+	if err != nil {
+		return err
+	}
+
+	if isPassed {
+		t.Status = common.StatusPassed
+	} else {
+		t.Status = common.StatusRejected
+	}
+	err = t.Update()
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
