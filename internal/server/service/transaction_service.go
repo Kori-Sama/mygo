@@ -3,7 +3,16 @@ package service
 import (
 	"mygo/internal/pkg/common"
 	"mygo/internal/server/model"
+	"sort"
+
+	"github.com/go-ego/gse"
 )
+
+// Global variable Declaration
+
+var Seg gse.Segmenter
+
+// End of Global variable Declaration
 
 func SearchTransactions(search string) ([]common.TransactionResponse, error) {
 	transactions, err := model.GetPassedTransactions()
@@ -12,7 +21,43 @@ func SearchTransactions(search string) ([]common.TransactionResponse, error) {
 	}
 	var res []common.TransactionResponse
 
-	// TODO 👀
+	segment := Seg.CutSearch(search, true)
+	searchMap := make(map[string]int)
+
+	for _, s := range segment {
+		value, _, err := Seg.Value(s)
+		if err != nil {
+			return nil, err
+		}
+		searchMap[s] = value
+	}
+
+	searchResult := [][2]any{} // [transaction, score]
+	for _, t := range transactions {
+		score := 0
+		titleSeg := Seg.CutSearch(t.Title, true)
+		for _, s := range titleSeg {
+			if _, ok := searchMap[s]; ok {
+				score += 3
+			}
+		}
+
+		descriptionSeg := Seg.CutSearch(t.Description, true)
+		for _, s := range descriptionSeg {
+			if _, ok := searchMap[s]; ok {
+				score += 1
+			}
+		}
+
+		searchResult = append(searchResult, [2]any{t, score})
+	}
+	sort.Slice(searchResult, func(i, j int) bool {
+		return searchResult[i][1].(int) > searchResult[j][1].(int)
+	})
+
+	for _, r := range searchResult {
+		res = append(res, *r[0].(*model.Transaction).ToResponse())
+	}
 
 	return res, nil
 }
