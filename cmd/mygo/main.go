@@ -6,6 +6,7 @@ import (
 	"mygo/internal/server/controller"
 	"mygo/internal/server/middlewares"
 	"mygo/internal/server/model"
+	"mygo/internal/server/service"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -59,6 +60,8 @@ func main() {
 	}
 
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	service.Seg.LoadDict()
 
 	app.Run(":" + config.Server.Port)
 }
