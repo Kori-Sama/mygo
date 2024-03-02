@@ -16,6 +16,8 @@ require (
 	xorm.io/xorm v1.3.7
 )
 
+require bou.ke/monkey v1.0.2 // direct
+
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/StackExchange/wmi v0.0.0-20180116203802-5d049714c4a6 // indirect

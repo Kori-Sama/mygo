@@ -25,10 +25,7 @@ func SearchTransactions(search string) ([]common.TransactionResponse, error) {
 	searchMap := make(map[string]int)
 
 	for _, s := range segment {
-		value, _, err := Seg.Value(s)
-		if err != nil {
-			return nil, err
-		}
+		value, _, _ := Seg.Value(s) // should have some err handling
 		searchMap[s] = value
 	}
 
@@ -49,7 +46,9 @@ func SearchTransactions(search string) ([]common.TransactionResponse, error) {
 			}
 		}
 
-		searchResult = append(searchResult, [2]any{t, score})
+		if score != 0 {
+			searchResult = append(searchResult, [2]any{t, score})
+		}
 	}
 	sort.Slice(searchResult, func(i, j int) bool {
 		return searchResult[i][1].(int) > searchResult[j][1].(int)
