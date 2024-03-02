@@ -197,6 +197,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/transaction/censor": {
+            "post": {
+                "description": "Censor a transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "Censor a transaction",
+                "parameters": [
+                    {
+                        "description": "censor request",
+                        "name": "censorRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/common.CensorRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Result"
+                        }
+                    }
+                }
+            }
+        },
         "/api/transaction/delete/{id}": {
             "post": {
                 "description": "Delete a transaction",
@@ -298,6 +332,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/transaction/search": {
+            "get": {
+                "description": "search transaction by title or description",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "search transaction",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "search string",
+                        "name": "search",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/common.TransactionResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/transaction/self": {
             "get": {
                 "description": "get transactions of login user",
@@ -358,6 +427,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "common.CensorRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "is_passed": {
+                    "type": "boolean"
+                }
+            }
+        },
         "common.LoginRequest": {
             "type": "object",
             "properties": {
@@ -442,6 +522,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "integer"
+                },
+                "user_id": {
                     "type": "integer"
                 },
                 "value": {

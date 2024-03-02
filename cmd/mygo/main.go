@@ -53,10 +53,12 @@ func main() {
 		t.GET("/:id", controller.GetTransaction)
 		t.GET("/self", controller.GetOwnTransactions)
 		t.GET("/by", controller.GetTransactionByStatus)
+		t.GET("/search", controller.SearchTransaction)
 		t.POST("/new", controller.NewTransaction)
 		t.POST("/save", controller.SaveTransaction)
 		t.POST("/publish", controller.PublishTransaction)
 		t.POST("/delete", controller.DeleteTransaction)
+		t.POST("/censor", controller.CensorTransaction)
 	}
 
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

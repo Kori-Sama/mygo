@@ -15,7 +15,7 @@ var Seg gse.Segmenter
 // End of Global variable Declaration
 
 func SearchTransactions(search string) ([]common.TransactionResponse, error) {
-	_, err := model.GetPassedTransactions()
+	transactions, err := model.GetPassedTransactions()
 	if err != nil {
 		return nil, err
 	}
@@ -27,6 +27,9 @@ func SearchTransactions(search string) ([]common.TransactionResponse, error) {
 	for _, s := range segment {
 		value, _, _ := Seg.Value(s) // should have some err handling
 		searchMap[s] = value
+		// if err != nil {
+		// 	return nil, err
+		// }
 	}
 
 	searchResult := [][2]any{} // [transaction, score]

@@ -1,4 +1,11 @@
 definitions:
+  common.CensorRequest:
+    properties:
+      id:
+        type: integer
+      is_passed:
+        type: boolean
+    type: object
   common.LoginRequest:
     properties:
       password:
@@ -58,6 +65,8 @@ definitions:
       title:
         type: string
       updated_at:
+        type: integer
+      user_id:
         type: integer
       value:
         type: integer
@@ -211,6 +220,28 @@ paths:
       summary: get transactions by status
       tags:
       - transaction
+  /api/transaction/censor:
+    post:
+      consumes:
+      - application/json
+      description: Censor a transaction
+      parameters:
+      - description: censor request
+        in: body
+        name: censorRequest
+        required: true
+        schema:
+          $ref: '#/definitions/common.CensorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Result'
+      summary: Censor a transaction
+      tags:
+      - transaction
   /api/transaction/delete/{id}:
     post:
       consumes:
@@ -275,6 +306,29 @@ paths:
           schema:
             $ref: '#/definitions/common.Result'
       summary: Save a transaction
+      tags:
+      - transaction
+  /api/transaction/search:
+    get:
+      consumes:
+      - application/json
+      description: search transaction by title or description
+      parameters:
+      - description: search string
+        in: query
+        name: search
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/common.TransactionResponse'
+            type: array
+      summary: search transaction
       tags:
       - transaction
   /api/transaction/self:

@@ -11,6 +11,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// @Summary		search transaction
+// @Description	search transaction by title or description
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Param			search	query		string							true	"search string"
+// @Success		200		{object}	[]common.TransactionResponse	"OK"
+// @Router			/api/transaction/search [get]
 func SearchTransaction(ctx *gin.Context) {
 	search := ctx.Query("search")
 	transactions, err := service.SearchTransactions(search)
@@ -258,6 +266,46 @@ func DeleteTransaction(ctx *gin.Context) {
 		return
 	}
 	err = service.DeleteTransaction(user.ID, transactionID)
+	if err != nil {
+		if common.CheckInternalError(err) {
+			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
+			return
+		}
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
+		return
+	}
+	ctx.JSON(common.OK, common.Ok(nil))
+}
+
+// @Summary		Censor a transaction
+// @Description	Censor a transaction
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Param			censorRequest	body		common.CensorRequest	true	"censor request"
+// @Success		200				{object}	common.Result			"OK"
+// @Router			/api/transaction/censor [post]
+func CensorTransaction(ctx *gin.Context) {
+	var request common.CensorRequest
+	err := ctx.ShouldBind(&request)
+	if err != nil {
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
+		return
+	}
+
+	transactionID, isPassed := request.ID, request.IsPassed
+
+	user := utils.GetLoginUser(ctx)
+	if user == nil {
+		ctx.JSON(common.UNAUTHORIZED, common.NoAuth(common.ErrorGetInfoFromToken.Error()))
+		return
+	}
+	if user.Role != common.RoleAdmin {
+		ctx.JSON(common.FORBIDDEN, common.Forbidden(common.ErrorNoPermission.Error()))
+		return
+	}
+
+	err = service.CensorTransaction(isPassed, transactionID)
 	if err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
