@@ -43,15 +43,15 @@ func SyncTables() {
 }
 
 func initEnum() error {
-	_, err := engine.Exec("create type role as enum('Old', 'Volunteer', 'Admin')")
+	_, err := engine.Exec("create type role as enum('Old', 'Volunteer', 'Admin');")
 	if err != nil {
 		return err
 	}
-	_, err = engine.Exec("create type status as enum('draft', 'censoring', 'passed','rejected')")
+	_, err = engine.Exec("create type status as enum('Draft', 'Censoring', 'Passed','Rejected');")
 	if err != nil {
 		return err
 	}
-	_, err = engine.Exec("create type action as enum('create', 'update', 'delete')")
+	_, err = engine.Exec("create type action as enum('Create', 'Update', 'Delete');")
 	if err != nil {
 		return err
 	}

@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	ID         int         `xorm:"pk uuid DEFAULT gen_random_uuid() 'id'"`
+	ID         int         `xorm:"pk autoincr 'id'"`
 	Name       string      `xorm:"varchar notnull unique  'name'"`
 	Password   string      `xorm:"varchar(32) notnull 'password'"`
 	Role       common.Role `xorm:"type:role 'role'"`
@@ -36,9 +36,12 @@ func CreateUser(name, password string, role common.Role) (int, error) {
 
 func GetUserById(id int) (*User, error) {
 	user := &User{}
-	_, err := engine.ID(id).Get(user)
+	isFind, err := engine.ID(id).Get(user)
 	if err != nil {
 		return nil, common.ErrorOperateDatabase
+	}
+	if !isFind {
+		return nil, common.ErrorUnknownUserId
 	}
 	return user, nil
 }

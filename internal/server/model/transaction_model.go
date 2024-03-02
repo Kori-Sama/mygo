@@ -6,7 +6,7 @@ import (
 )
 
 type Transaction struct {
-	TransactionID int           `xorm:"pk uuid DEFAULT gen_random_uuid() 'transaction_id'"`
+	TransactionID int           `xorm:"pk autoincr 'transaction_id'"`
 	UserID        int           `xorm:"'user_id'"`
 	Title         string        `xorm:"varchar(100) notnull 'title'"`
 	Description   string        `xorm:"text notnull 'description'"`
@@ -19,12 +19,13 @@ type Transaction struct {
 func (t *Transaction) ToResponse() *common.TransactionResponse {
 	return &common.TransactionResponse{
 		ID:          t.TransactionID,
+		UserID:      t.UserID,
 		Title:       t.Title,
 		Description: t.Description,
 		Value:       t.Value,
 		Status:      t.Status,
-		CreatedAt:   t.CreatedAt.Second(),
-		UpdatedAt:   t.UpdatedAt.Second(),
+		CreatedAt:   t.CreatedAt.Unix(),
+		UpdatedAt:   t.UpdatedAt.Unix(),
 	}
 }
 
@@ -45,9 +46,12 @@ func CreateTransaction(userID int, t common.NewTransactionRequest, status common
 
 func GetTransactionById(id int) (*Transaction, error) {
 	transaction := &Transaction{}
-	_, err := engine.ID(id).Get(transaction)
+	isFind, err := engine.ID(id).Get(transaction)
 	if err != nil {
 		return nil, common.ErrorOperateDatabase
+	}
+	if !isFind {
+		return nil, common.ErrorUnknownTransaction
 	}
 	return transaction, nil
 }

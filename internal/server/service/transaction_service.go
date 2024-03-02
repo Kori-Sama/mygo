@@ -6,7 +6,7 @@ import (
 )
 
 func SearchTransactions(search string) ([]common.TransactionResponse, error) {
-	transactions, err := model.GetPassedTransactions()
+	_, err := model.GetPassedTransactions()
 	if err != nil {
 		return nil, err
 	}

@@ -12,13 +12,13 @@ func CheckRole(role common.Role) bool {
 
 func FilterStatus(status string) (common.Status, error) {
 	switch status {
-	case "draft":
+	case "Draft":
 		return common.StatusDraft, nil
-	case "censoring":
+	case "Censoring":
 		return common.StatusCensoring, nil
-	case "passed":
+	case "Passed":
 		return common.StatusPassed, nil
-	case "rejected":
+	case "Rejected":
 		return common.StatusRejected, nil
 	default:
 		return "", common.ErrorInvalidParam
