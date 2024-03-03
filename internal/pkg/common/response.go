@@ -10,3 +10,12 @@ type TransactionResponse struct {
 	CreatedAt   int64  `json:"created_at"`
 	UpdatedAt   int64  `json:"updated_at"`
 }
+
+type UserResponse struct {
+	ID        int    `json:"id"`
+	Name      string `json:"name"`
+	Age       int    `json:"age"`
+	Role      Role   `json:"role"`
+	CreatedAt int64  `json:"created_at"`
+	UpdatedAt int64  `json:"updated_at"`
+}

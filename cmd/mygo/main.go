@@ -50,11 +50,17 @@ func main() {
 		// bc.POST("/transfer", controller.Transfer)
 	}
 
+	user := auth.Group("/user")
+	{
+		user.GET("/", controller.GetAllUsers)
+		user.GET("/:id", controller.GetUser)
+	}
+
 	t := auth.Group("/transaction")
 	{
 		t.GET("/", controller.GetAllTransactions)
 		t.GET("/:id", controller.GetTransaction)
-		t.GET("/page", controller.GetLimitedTransactions)
+		t.GET("/limit", controller.GetLimitedTransactions)
 		t.GET("/self", controller.GetOwnTransactions)
 		t.GET("/by", controller.GetTransactionByStatus)
 		t.GET("/search", controller.SearchTransaction)

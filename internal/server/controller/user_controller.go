@@ -5,6 +5,8 @@ import (
 	"mygo/internal/pkg/constants"
 	"mygo/internal/pkg/utils"
 	"mygo/internal/server/service"
+	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -79,4 +81,53 @@ func Register(ctx *gin.Context) {
 
 	ctx.Header(constants.TOKEN_NAME, constants.TOKEN_PREFIX+token)
 	ctx.JSON(common.OK, common.Ok(nil))
+}
+
+// @Summary		get all users
+// @Description	get all users
+// @Tags			user
+// @Accept			json
+// @Produce		json
+// @Success		200				{object}	[]common.UserResponse		"OK"
+// @Router			/api/users [get]
+func GetAllUsers(ctx *gin.Context) {
+	users, err := service.GetAllUsers()
+	if err != nil {
+		if common.CheckInternalError(err) {
+			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
+			return
+		}
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
+		return
+	}
+	ctx.JSON(common.OK, common.Ok(users))
+}
+
+// @Summary		get user by id
+// @Description	get user by id
+// @Tags			user
+// @Accept			json
+// @Produce		json
+// @Param			id	path	int	true	"user id"
+// @Success		200				{object}	common.UserResponse		"OK"
+// @Router			/api/users/{id} [get]
+func GetUser(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+
+	id, err := strconv.Atoi(strings.TrimSpace(idStr))
+	if err != nil {
+		ctx.JSON(common.BAD_REQUEST, common.Bad(common.ErrorInvalidParam.Error()))
+		return
+	}
+
+	user, err := service.GetUserById(id)
+	if err != nil {
+		if common.CheckInternalError(err) {
+			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
+			return
+		}
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
+		return
+	}
+	ctx.JSON(common.OK, common.Ok(user))
 }

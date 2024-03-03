@@ -11,14 +11,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-//	@Summary		search transaction
-//	@Description	search transaction by title or description
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Param			search	query		string							true	"search string"
-//	@Success		200		{object}	[]common.TransactionResponse	"OK"
-//	@Router			/api/transaction/search [get]
+// @Summary		search transaction
+// @Description	search transaction by title or description
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Param			search	query		string							true	"search string"
+// @Success		200		{object}	[]common.TransactionResponse	"OK"
+// @Router			/api/transaction/search [get]
 func SearchTransaction(ctx *gin.Context) {
 	search := ctx.Query("search")
 	transactions, err := service.SearchTransactions(search)
@@ -33,14 +33,14 @@ func SearchTransaction(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(transactions))
 }
 
-//	@Summary		get transaction
-//	@Description	get single transaction by id, only allowed for admins
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Param			id	path		int							true	"Transaction ID"
-//	@Success		200	{object}	common.TransactionResponse	"OK"
-//	@Router			/api/transaction/{id} [get]
+// @Summary		get transaction
+// @Description	get single transaction by id, only allowed for admins
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int							true	"Transaction ID"
+// @Success		200	{object}	common.TransactionResponse	"OK"
+// @Router			/api/transaction/{id} [get]
 func GetTransaction(ctx *gin.Context) {
 	transactionIDStr := ctx.Param("id")
 	transactionID, err := strconv.Atoi(strings.TrimSpace(transactionIDStr))
@@ -72,13 +72,13 @@ func GetTransaction(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(transaction))
 }
 
-//	@Summary		get self transactions
-//	@Description	get transactions of login user
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	[]common.TransactionResponse	"OK"
-//	@Router			/api/transaction/self [get]
+// @Summary		get self transactions
+// @Description	get transactions of login user
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Success		200	{object}	[]common.TransactionResponse	"OK"
+// @Router			/api/transaction/self [get]
 func GetOwnTransactions(ctx *gin.Context) {
 	user := utils.GetLoginUser(ctx)
 	if user == nil {
@@ -98,13 +98,13 @@ func GetOwnTransactions(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(transactions))
 }
 
-//	@Summary		get all transactions
-//	@Description	get all transactions, admins can see all transactions, users can only see passed transactions
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	[]common.TransactionResponse	"OK"
-//	@Router			/api/transaction [get]
+// @Summary		get all transactions
+// @Description	get all transactions, admins can see all transactions, users can only see passed transactions
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Success		200	{object}	[]common.TransactionResponse	"OK"
+// @Router			/api/transaction [get]
 func GetAllTransactions(ctx *gin.Context) {
 	user := utils.GetLoginUser(ctx)
 	if user == nil {
@@ -123,17 +123,17 @@ func GetAllTransactions(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(transactions))
 }
 
-//	@Summary		get limited transactions
-//	@Description	get limited transactions, admins can see all transactions, users can only see passed transactions
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Param			limit	query		int								true	"limit"
-//	@Success		200		{object}	[]common.TransactionResponse	"OK"
-//	@Router			/api/transaction [get]
+// @Summary		get limited transactions
+// @Description	get limited transactions, admins can see all transactions, users can only see passed transactions
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Param			limit	query		int								true	"limit"
+// @Success		200		{object}	[]common.TransactionResponse	"OK"
+// @Router			/api/transaction [get]
 func GetLimitedTransactions(ctx *gin.Context) {
-	limitStr := ctx.Query("limit")
-	limit, err := strconv.Atoi(limitStr)
+	indexStr := ctx.Query("index")
+	index, err := strconv.Atoi(indexStr)
 	if err != nil {
 		ctx.JSON(common.BAD_REQUEST, common.Bad(common.ErrorInvalidParam.Error()))
 		return
@@ -145,7 +145,7 @@ func GetLimitedTransactions(ctx *gin.Context) {
 		return
 	}
 
-	transactions, err := service.GetLimitedTransactions(user.Role, limit)
+	transactions, err := service.GetLimitedTransactions(user.Role, index)
 	if err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
@@ -157,14 +157,14 @@ func GetLimitedTransactions(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(transactions))
 }
 
-//	@Summary		get transactions by status
-//	@Description	get transactions by status, only admins have permission to access other statuses except passed
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Param			status	query		string							true	"transaction status"
-//	@Success		200		{object}	[]common.TransactionResponse	"OK"
-//	@Router			/api/transaction/by [get]
+// @Summary		get transactions by status
+// @Description	get transactions by status, only admins have permission to access other statuses except passed
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Param			status	query		string							true	"transaction status"
+// @Success		200		{object}	[]common.TransactionResponse	"OK"
+// @Router			/api/transaction/by [get]
 func GetTransactionByStatus(ctx *gin.Context) {
 	statusRaw := ctx.Query("status")
 	status, err := utils.FilterStatus(statusRaw)
@@ -196,13 +196,13 @@ func GetTransactionByStatus(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(transactions))
 }
 
-//	@Summary		Create a new transaction
-//	@Description	Create a new transaction
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	common.Result	"OK"
-//	@Router			/api/transaction/new [post]
+// @Summary		Create a new transaction
+// @Description	Create a new transaction
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Success		200	{object}	common.Result	"OK"
+// @Router			/api/transaction/new [post]
 func NewTransaction(ctx *gin.Context) {
 	user := utils.GetLoginUser(ctx)
 	if user == nil {
@@ -223,13 +223,13 @@ func NewTransaction(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(gin.H{"id": transactionID}))
 }
 
-//	@Summary		Save a transaction
-//	@Description	Save a transaction
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	common.Result	"OK"
-//	@Router			/api/transaction/save [post]
+// @Summary		Save a transaction
+// @Description	Save a transaction
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Success		200	{object}	common.Result	"OK"
+// @Router			/api/transaction/save [post]
 func SaveTransaction(ctx *gin.Context) {
 	user := utils.GetLoginUser(ctx)
 	if user == nil {
@@ -251,13 +251,13 @@ func SaveTransaction(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(nil))
 }
 
-//	@Summary		Publish a transaction
-//	@Description	Publish a transaction
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	common.Result	"OK"
-//	@Router			/api/transaction/publish [post]
+// @Summary		Publish a transaction
+// @Description	Publish a transaction
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Success		200	{object}	common.Result	"OK"
+// @Router			/api/transaction/publish [post]
 func PublishTransaction(ctx *gin.Context) {
 	user := utils.GetLoginUser(ctx)
 	if user == nil {
@@ -278,14 +278,14 @@ func PublishTransaction(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(nil))
 }
 
-//	@Summary		Delete a transaction
-//	@Description	Delete a transaction
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Param			id	path		int				true	"Transaction ID"
-//	@Success		200	{object}	common.Result	"OK"
-//	@Router			/api/transaction/delete/{id} [post]
+// @Summary		Delete a transaction
+// @Description	Delete a transaction
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int				true	"Transaction ID"
+// @Success		200	{object}	common.Result	"OK"
+// @Router			/api/transaction/delete/{id} [post]
 func DeleteTransaction(ctx *gin.Context) {
 	transactionIDStr := ctx.Param("id")
 	transactionID, err := strconv.Atoi(strings.TrimSpace(transactionIDStr))
@@ -311,14 +311,14 @@ func DeleteTransaction(ctx *gin.Context) {
 	ctx.JSON(common.OK, common.Ok(nil))
 }
 
-//	@Summary		Censor a transaction
-//	@Description	Censor a transaction
-//	@Tags			transaction
-//	@Accept			json
-//	@Produce		json
-//	@Param			censorRequest	body		common.CensorRequest	true	"censor request"
-//	@Success		200				{object}	common.Result			"OK"
-//	@Router			/api/transaction/censor [post]
+// @Summary		Censor a transaction
+// @Description	Censor a transaction
+// @Tags			transaction
+// @Accept			json
+// @Produce		json
+// @Param			censorRequest	body		common.CensorRequest	true	"censor request"
+// @Success		200				{object}	common.Result			"OK"
+// @Router			/api/transaction/censor [post]
 func CensorTransaction(ctx *gin.Context) {
 	var request common.CensorRequest
 	err := ctx.ShouldBind(&request)

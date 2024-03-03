@@ -19,6 +19,17 @@ type User struct {
 	UpdatedAt  time.Time   `xorm:"updated 'updated_at'"`
 }
 
+func (u *User) ToResponse() *common.UserResponse {
+	return &common.UserResponse{
+		ID:        u.ID,
+		Name:      u.Name,
+		Age:       u.Age,
+		Role:      u.Role,
+		CreatedAt: u.CreatedAt.Unix(),
+		UpdatedAt: u.UpdatedAt.Unix(),
+	}
+}
+
 func CreateUser(name, password string, role common.Role) (int, error) {
 	user := User{
 		Name:     name,
@@ -32,6 +43,15 @@ func CreateUser(name, password string, role common.Role) (int, error) {
 		return 0, common.ErrorOperateDatabase
 	}
 	return user.ID, nil
+}
+
+func GetAllUsers() ([]User, error) {
+	users := make([]User, 0)
+	err := engine.Find(&users)
+	if err != nil {
+		return nil, common.ErrorOperateDatabase
+	}
+	return users, nil
 }
 
 func GetUserById(id int) (*User, error) {

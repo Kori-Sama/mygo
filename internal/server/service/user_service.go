@@ -38,3 +38,23 @@ func Register(username string, password string, role common.Role) (int, error) {
 	encryptedPwd := utils.Encrypt(password)
 	return model.CreateUser(username, encryptedPwd, role)
 }
+
+func GetAllUsers() ([]common.UserResponse, error) {
+	users, err := model.GetAllUsers()
+	if err != nil {
+		return nil, err
+	}
+	var userResponses []common.UserResponse
+	for _, user := range users {
+		userResponses = append(userResponses, *user.ToResponse())
+	}
+	return userResponses, nil
+}
+
+func GetUserById(id int) (*common.UserResponse, error) {
+	user, err := model.GetUserById(id)
+	if err != nil {
+		return nil, err
+	}
+	return user.ToResponse(), nil
+}

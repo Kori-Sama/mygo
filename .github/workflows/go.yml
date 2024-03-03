@@ -22,11 +22,11 @@ jobs:
       run: go build -v ./cmd/mygo
     
     - name: Deploy 
-      uses: easingthemes/ssh-deploy@v2.1.5
-      env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-rltgoDzvO --delete"
-          SOURCE: "mygo"
-          REMOTE_HOST: ${{ secrets.SERVER_URL }}
-          REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: /home/${{ secrets.USERNAME }}/mygo
+      uses: easingthemes/ssh-deploy@v5.0.3
+      with:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        ARGS: "-rltgoDzvO --delete"
+        SOURCE: "mygo"
+        REMOTE_HOST: ${{ secrets.SERVER_URL }}
+        REMOTE_USER: ${{ secrets.USERNAME }}
+        TARGET: /home/${{ secrets.USERNAME }}/mygo

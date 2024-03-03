@@ -178,13 +178,13 @@ func CensorTransaction(isPassed bool, transactionID int) error {
 	return nil
 }
 
-func GetLimitedTransactions(role common.Role, limit int) ([]common.TransactionResponse, error) {
+func GetLimitedTransactions(role common.Role, index int) ([]common.TransactionResponse, error) {
 	var transactions []*model.Transaction
 	var err error
 	if role == common.RoleAdmin {
-		transactions, err = model.GetLimitedTransactions(limit)
+		transactions, err = model.GetLimitedTransactions(index)
 	} else {
-		transactions, err = model.GetLimitedPassedTransactions(limit)
+		transactions, err = model.GetLimitedPassedTransactions(index)
 	}
 	if err != nil {
 		return nil, err
