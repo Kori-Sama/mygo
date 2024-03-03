@@ -138,7 +138,7 @@ const docTemplate = `{
         },
         "/api/transaction": {
             "get": {
-                "description": "get all transactions, admins can see all transactions, users can only see passed transactions",
+                "description": "get limited transactions, admins can see all transactions, users can only see passed transactions",
                 "consumes": [
                     "application/json"
                 ],
@@ -148,7 +148,16 @@ const docTemplate = `{
                 "tags": [
                     "transaction"
                 ],
-                "summary": "get all transactions",
+                "summary": "get limited transactions",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",

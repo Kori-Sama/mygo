@@ -1,6 +1,7 @@
 package model
 
 import (
+	"mygo/config"
 	"mygo/internal/pkg/common"
 	"time"
 )
@@ -126,4 +127,32 @@ func DeleteTransaction(id int) error {
 		return common.ErrorOperateDatabase
 	}
 	return nil
+}
+
+func GetLimitedTransactions(offset int) ([]*Transaction, error) {
+	limit := config.Database.Limit
+	if limit == 0 {
+		limit = 20
+	}
+	offset = offset * limit
+	transactions := make([]*Transaction, 0)
+	err := engine.Limit(limit, offset).Find(&transactions)
+	if err != nil {
+		return nil, err
+	}
+	return transactions, nil
+}
+
+func GetLimitedPassedTransactions(offset int) ([]*Transaction, error) {
+	limit := config.Database.Limit
+	if limit == 0 {
+		limit = 20
+	}
+	offset = offset * limit
+	transactions := make([]*Transaction, 0)
+	err := engine.Limit(limit, offset).Where("status = ?", common.StatusPassed).Find(&transactions)
+	if err != nil {
+		return nil, err
+	}
+	return transactions, nil
 }

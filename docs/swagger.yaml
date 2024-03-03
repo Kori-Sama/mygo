@@ -161,8 +161,14 @@ paths:
     get:
       consumes:
       - application/json
-      description: get all transactions, admins can see all transactions, users can
-        only see passed transactions
+      description: get limited transactions, admins can see all transactions, users
+        can only see passed transactions
+      parameters:
+      - description: limit
+        in: query
+        name: limit
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -172,7 +178,7 @@ paths:
             items:
               $ref: '#/definitions/common.TransactionResponse'
             type: array
-      summary: get all transactions
+      summary: get limited transactions
       tags:
       - transaction
   /api/transaction/{id}:

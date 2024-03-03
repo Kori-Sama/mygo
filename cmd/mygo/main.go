@@ -54,6 +54,7 @@ func main() {
 	{
 		t.GET("/", controller.GetAllTransactions)
 		t.GET("/:id", controller.GetTransaction)
+		t.GET("/page", controller.GetLimitedTransactions)
 		t.GET("/self", controller.GetOwnTransactions)
 		t.GET("/by", controller.GetTransactionByStatus)
 		t.GET("/search", controller.SearchTransaction)

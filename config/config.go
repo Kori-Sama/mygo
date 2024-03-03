@@ -29,6 +29,7 @@ type databaseConfig struct {
 	Password string `yaml:"password"`
 	DbName   string `yaml:"dbName"`
 	SSL      string `yaml:"ssl"`
+	Limit    int    `yaml:"limit"`
 }
 
 type blockchainConfig struct {
