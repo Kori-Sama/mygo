@@ -21,12 +21,12 @@ jobs:
     - name: Build
       run: go build -v ./cmd/mygo
     
-    - name: Upload
-      uses: zhenyuWang/Upload-File-Action@v1.0.1
-      with: 
-        username: ${{ secrets.USERNAME }}
-        server: ${{secrets.SERVER_URL}}
-        port: 22
-        ssh_private_key: ${{secrets.SSH_PRIVATE_KEY}}
-        local_file: ./mygo
-        target_path: /home/${{secrets.USERNAME}}/mygo
+    - name: Deploy 
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rltgoDzvO --delete"
+          SOURCE: "mygo"
+          REMOTE_HOST: ${{ secrets.SERVER_URL }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: /home/${{ secrets.USERNAME }}/mygo
