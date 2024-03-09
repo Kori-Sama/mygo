@@ -24,4 +24,6 @@ const (
 	ActionEdit    Action = "Edit"
 	ActionDelete  Action = "Delete"
 	ActionRespond Action = "Respond"
+	ActionSave    Action = "Save"
+	ActionCensor  Action = "Censor"
 )

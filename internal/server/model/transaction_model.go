@@ -7,14 +7,14 @@ import (
 )
 
 type Transaction struct {
-	TransactionID int           `xorm:"pk autoincr 'transaction_id'"`
-	UserID        int           `xorm:"'user_id'"`
-	Title         string        `xorm:"varchar(100) notnull 'title'"`
-	Description   string        `xorm:"text notnull 'description'"`
-	Value         int           `xorm:"notnull 'value'"`
-	Status        common.Status `xorm:"type:status 'status'"`
-	CreatedAt     time.Time     `xorm:"created 'created_at'"`
-	UpdatedAt     time.Time     `xorm:"updated 'updated_at'"`
+	TransactionID int           `xorm:"pk autoincr 'transaction_id'" json:"id"`
+	UserID        int           `xorm:"'user_id'" json:"user_id"`
+	Title         string        `xorm:"varchar(100) notnull 'title'" json:"title"`
+	Description   string        `xorm:"text notnull 'description'" json:"description"`
+	Value         int           `xorm:"notnull 'value'" json:"value"`
+	Status        common.Status `xorm:"type:status 'status'" json:"status"`
+	CreatedAt     time.Time     `xorm:"created 'created_at'" json:"created_at"`
+	UpdatedAt     time.Time     `xorm:"updated 'updated_at'" json:"updated_at"`
 }
 
 func (t *Transaction) ToResponse() *common.TransactionResponse {
@@ -30,7 +30,7 @@ func (t *Transaction) ToResponse() *common.TransactionResponse {
 	}
 }
 
-func CreateTransaction(userID int, t common.NewTransactionRequest, status common.Status) (int, error) {
+func CreateTransaction(userID int, t common.NewTransactionRequest, status common.Status) (Transaction, error) {
 	transaction := Transaction{
 		UserID:      userID,
 		Title:       t.Title,
@@ -40,9 +40,9 @@ func CreateTransaction(userID int, t common.NewTransactionRequest, status common
 	}
 	_, err := engine.Insert(&transaction)
 	if err != nil {
-		return 0, common.ErrorOperateDatabase
+		return transaction, common.ErrorOperateDatabase
 	}
-	return transaction.TransactionID, nil
+	return transaction, nil
 }
 
 func GetTransactionById(id int) (*Transaction, error) {
@@ -65,7 +65,7 @@ func (t *Transaction) Update() error {
 	return nil
 }
 
-func UpdateTransaction(id int, t common.TransactionRequest, status common.Status) error {
+func UpdateTransaction(id int, t common.TransactionRequest, status common.Status) (Transaction, error) {
 	transaction := &Transaction{
 		TransactionID: id,
 		Title:         t.Title,
@@ -73,7 +73,7 @@ func UpdateTransaction(id int, t common.TransactionRequest, status common.Status
 		Value:         t.Value,
 		Status:        status,
 	}
-	return transaction.Update()
+	return *transaction, transaction.Update()
 }
 
 func GetTransactionsByUserID(userID int) ([]*Transaction, error) {
