@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
 
 // @Summary		search transaction
@@ -238,7 +237,7 @@ func SaveTransaction(ctx *gin.Context) {
 	}
 	transaction := common.TransactionRequest{}
 	ctx.ShouldBind(&transaction)
-	log.Debugf("SaveTransaction: %+v", transaction)
+
 	_, err := service.SaveTransaction(user.ID, transaction)
 	if err != nil {
 		if common.CheckInternalError(err) {

@@ -71,6 +71,12 @@ func main() {
 		t.POST("/censor", controller.CensorTransaction)
 	}
 
+	his := auth.Group("/history")
+	{
+		his.GET("/", controller.GetAllHistories)
+		his.GET("/query", controller.QueryHistory)
+	}
+
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	app.Run(":" + config.Server.Port)

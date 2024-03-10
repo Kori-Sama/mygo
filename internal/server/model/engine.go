@@ -51,7 +51,7 @@ func initEnum() error {
 	if err != nil {
 		return err
 	}
-	_, err = engine.Exec("create type action as enum('Create', 'Update', 'Delete');")
+	_, err = engine.Exec("create type action as enum('Create', 'Update', 'Delete','Respond', 'Save', 'Censor');")
 	if err != nil {
 		return err
 	}

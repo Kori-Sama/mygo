@@ -156,3 +156,19 @@ func GetLimitedPassedTransactions(offset int) ([]*Transaction, error) {
 	}
 	return transactions, nil
 }
+
+func GetAllTransactionCount() (int64, error) {
+	count, err := engine.Count(new(Transaction))
+	if err != nil {
+		return -1, err
+	}
+	return count, nil
+}
+
+func GetPassedTransactionCount() (int64, error) {
+	count, err := engine.Where("status = ?", common.StatusPassed).Count(new(Transaction))
+	if err != nil {
+		return -1, err
+	}
+	return count, nil
+}

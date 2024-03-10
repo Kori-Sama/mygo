@@ -24,3 +24,22 @@ func FilterStatus(status string) (common.Status, error) {
 		return "", common.ErrorInvalidParam
 	}
 }
+
+func FilterAction(action string) (common.Action, error) {
+	switch action {
+	case "Create":
+		return common.ActionCreate, nil
+	case "Edit":
+		return common.ActionEdit, nil
+	case "Delete":
+		return common.ActionDelete, nil
+	case "Respond":
+		return common.ActionRespond, nil
+	case "Save":
+		return common.ActionSave, nil
+	case "Censor":
+		return common.ActionCensor, nil
+	default:
+		return "", common.ErrorInvalidParam
+	}
+}
