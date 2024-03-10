@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/json"
 	"mygo/internal/pkg/common"
 	"mygo/internal/server/model"
 	"sort"
@@ -104,6 +105,16 @@ func GetTransactions(role common.Role) ([]common.TransactionResponse, error) {
 	return res, nil
 }
 
+func GetTransactionById(transactionID int) ([]common.TransactionResponse, error) {
+	transaction, err := model.GetTransactionById(transactionID)
+	if err != nil {
+		return nil, err
+	}
+	var res []common.TransactionResponse
+	res = append(res, *transaction.ToResponse())
+	return res, nil
+}
+
 func GetTransactionByStatus(status common.Status) ([]common.TransactionResponse, error) {
 	transactions, err := model.GetTransactionsByStatus(status)
 	if err != nil {
@@ -116,36 +127,56 @@ func GetTransactionByStatus(status common.Status) ([]common.TransactionResponse,
 	return res, nil
 }
 
-func NewTransaction(userID int, transaction common.NewTransactionRequest) (int, error) {
-	return model.CreateTransaction(userID, transaction, common.StatusDraft)
+func NewTransaction(userID int, transaction common.NewTransactionRequest) (model.Transaction, error) {
+	newTrans, err := model.CreateTransaction(userID, transaction, common.StatusDraft)
+	if err != nil {
+		return model.Transaction{}, err
+	}
+
+	CreateHistory(userID, newTrans.TransactionID, common.ActionCreate, TransactionToString(newTrans))
+	return newTrans, nil
 }
 
-func SaveTransaction(userID int, transaction common.TransactionRequest) error {
-	return updateTransaction(userID, transaction, common.StatusDraft)
+func SaveTransaction(userID int, transaction common.TransactionRequest) (model.Transaction, error) {
+	newTrans, err := updateTransaction(userID, transaction, common.StatusDraft)
+	if err != nil {
+		return model.Transaction{}, err
+	}
+
+	CreateHistory(userID, newTrans.TransactionID, common.ActionSave, TransactionToString(newTrans))
+	return newTrans, nil
 }
 
 // Published transaction will be censored by admin
-func PublishTransaction(userID int, transaction common.TransactionRequest) error {
-	return updateTransaction(userID, transaction, common.StatusCensoring)
+func PublishTransaction(userID int, transaction common.TransactionRequest) (model.Transaction, error) {
+	newTrans, err := updateTransaction(userID, transaction, common.StatusCensoring)
+	if err != nil {
+		return model.Transaction{}, err
+	}
+
+	CreateHistory(userID, newTrans.TransactionID, common.ActionSave, "")
+	return newTrans, nil
 }
 
-func updateTransaction(userID int, transaction common.TransactionRequest, status common.Status) error {
+func updateTransaction(userID int, transaction common.TransactionRequest, status common.Status) (model.Transaction, error) {
 	_, err := model.GetUserById(userID)
 	if err != nil {
-		return err
+		return model.Transaction{}, err
 	}
 	t, err := model.GetTransactionById(transaction.ID)
 	if err != nil {
-		return err
+		return model.Transaction{}, err
 	}
 	if t.UserID != userID {
-		return common.ErrorMatchTransaction
+		return model.Transaction{}, common.ErrorMatchTransaction
 	}
-	err = model.UpdateTransaction(t.TransactionID, transaction, status)
+	newTransaction, err := model.UpdateTransaction(t.TransactionID, transaction, status)
 	if err != nil {
-		return err
+		return newTransaction, err
 	}
-	return nil
+
+	CreateHistory(userID, newTransaction.TransactionID, common.ActionEdit, TransactionToString(newTransaction))
+	return newTransaction, nil
 }
 
 func DeleteTransaction(userID, transactionID int) error {
@@ -156,10 +187,17 @@ func DeleteTransaction(userID, transactionID int) error {
 	if t.UserID != userID {
 		return common.ErrorMatchTransaction
 	}
-	return model.DeleteTransaction(transactionID)
+
+	err = model.DeleteTransaction(transactionID)
+	if err != nil {
+		return err
+	}
+
+	CreateHistory(userID, transactionID, common.ActionDelete, "")
+	return err
 }
 
-func CensorTransaction(isPassed bool, transactionID int) error {
+func CensorTransaction(adminID int, isPassed bool, transactionID int) error {
 	t, err := model.GetTransactionById(transactionID)
 	if err != nil {
 		return err
@@ -175,6 +213,8 @@ func CensorTransaction(isPassed bool, transactionID int) error {
 	if err != nil {
 		return err
 	}
+
+	CreateHistory(adminID, transactionID, common.ActionCensor, "")
 	return nil
 }
 
@@ -195,4 +235,21 @@ func GetLimitedTransactions(role common.Role, index int) ([]common.TransactionRe
 		res = append(res, *t.ToResponse())
 	}
 	return res, nil
+}
+
+func TransactionToString(t model.Transaction) string {
+	ret, err := json.Marshal(t)
+	if err != nil {
+		return ""
+	}
+	return string(ret)
+}
+
+func StringToTransaction(s string) *model.Transaction {
+	transaction := &model.Transaction{}
+	err := json.Unmarshal([]byte(s), transaction)
+	if err != nil {
+		return nil
+	}
+	return transaction
 }

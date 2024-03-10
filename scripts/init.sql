@@ -26,9 +26,10 @@ CREATE TABLE IF NOT EXISTS transaction (
 );
 
 CREATE TABLE IF NOT EXISTS history (
-    history_id INT PRIMARY KEY AUTO_INCREMENT,
+    history_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id INT,
     transaction_id INT,
+    new_value TEXT,
     action ENUM('Create', 'Edit', 'Delete', 'Respond') NOT NULL,
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id),

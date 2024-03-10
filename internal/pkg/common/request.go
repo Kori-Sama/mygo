@@ -42,3 +42,12 @@ type LoginUser struct {
 	Name string
 	Role Role
 }
+
+type HistoryRequest struct {
+	ID            int    `json:"id"`
+	UserID        int    `json:"user_id"`
+	TransactionID int    `json:"transaction_id"`
+	Action        Action `json:"action"`
+	Timestamp     int64  `json:"timestamp"`
+	NewValue      string `json:"new_value"`
+}

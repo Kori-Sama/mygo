@@ -211,7 +211,7 @@ func NewTransaction(ctx *gin.Context) {
 	}
 	transaction := common.NewTransactionRequest{}
 	ctx.ShouldBind(&transaction)
-	transactionID, err := service.NewTransaction(user.ID, transaction)
+	newTransaction, err := service.NewTransaction(user.ID, transaction)
 	if err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
@@ -220,7 +220,7 @@ func NewTransaction(ctx *gin.Context) {
 		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
 		return
 	}
-	ctx.JSON(common.OK, common.Ok(gin.H{"id": transactionID}))
+	ctx.JSON(common.OK, common.Ok(gin.H{"id": newTransaction.TransactionID}))
 }
 
 // @Summary		Save a transaction
@@ -239,7 +239,7 @@ func SaveTransaction(ctx *gin.Context) {
 	transaction := common.TransactionRequest{}
 	ctx.ShouldBind(&transaction)
 	log.Debugf("SaveTransaction: %+v", transaction)
-	err := service.SaveTransaction(user.ID, transaction)
+	_, err := service.SaveTransaction(user.ID, transaction)
 	if err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
@@ -266,7 +266,7 @@ func PublishTransaction(ctx *gin.Context) {
 	}
 	transaction := common.TransactionRequest{}
 	ctx.ShouldBind(&transaction)
-	err := service.PublishTransaction(user.ID, transaction)
+	_, err := service.PublishTransaction(user.ID, transaction)
 	if err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
@@ -339,7 +339,7 @@ func CensorTransaction(ctx *gin.Context) {
 		return
 	}
 
-	err = service.CensorTransaction(isPassed, transactionID)
+	err = service.CensorTransaction(user.ID, isPassed, transactionID)
 	if err != nil {
 		if common.CheckInternalError(err) {
 			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))

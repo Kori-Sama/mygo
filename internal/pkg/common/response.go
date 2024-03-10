@@ -19,3 +19,12 @@ type UserResponse struct {
 	CreatedAt int64  `json:"created_at"`
 	UpdatedAt int64  `json:"updated_at"`
 }
+
+type HistoryResponse struct {
+	ID            int    `json:"id"`
+	UserID        int    `json:"user_id"`
+	TransactionID int    `json:"transaction_id"`
+	Action        Action `json:"action"`
+	Timestamp     int64  `json:"timestamp"`
+	NewValue      string `json:"new_value"`
+}
