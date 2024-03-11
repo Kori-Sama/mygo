@@ -6,6 +6,18 @@ import (
 )
 
 func CreateHistory(userID int, transactionID int, action common.Action, newValue string) error {
+	_, err := model.GetUserById(userID)
+	if err != nil {
+		return err
+	}
+	_, err = model.GetTransactionById(transactionID)
+	// if err != nil && !(err == common.ErrorUnknownTransaction && action == common.ActionDelete) {
+	// 	return nil
+	// }
+	if err != nil && (err != common.ErrorUnknownTransaction || action != common.ActionDelete) {
+		return nil
+	}
+
 	return model.CreateHistory(userID, transactionID, action, newValue)
 }
 
