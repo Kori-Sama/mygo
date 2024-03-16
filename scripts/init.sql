@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS user (
     password VARCHAR(32) NOT NULL,
     role ENUM('Old', 'Volunteer', 'Admin') DEFAULT 'Old',
     age INT,
-    wallet VARCHAR(200),
+    wallet INT DEFAULT 0,
     passphrase VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -34,4 +34,14 @@ CREATE TABLE IF NOT EXISTS history (
     timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES user(id),
     FOREIGN KEY (transaction_id) REFERENCES transaction(transaction_id)
+);
+
+CREATE TABLE IF NOT EXISTS transferHistory (
+    transfer_id INT PRIMARY KEY AUTO_INCREMENT,
+    sender_id INT,
+    receiver_id INT,
+    amount INT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES user(id),
+    FOREIGN KEY (receiver_id) REFERENCES user(id)
 );

@@ -51,3 +51,11 @@ type HistoryRequest struct {
 	Timestamp     int64  `json:"timestamp"`
 	NewValue      string `json:"new_value"`
 }
+
+type TransferHistoryRequest struct {
+	ID         int   `json:"id"`
+	SenderID   int   `json:"sender_id"`
+	ReceiverID int   `json:"receiver_id"`
+	Amount     int   `json:"amount"`
+	TimeStamp  int64 `json:"timestamp"`
+}

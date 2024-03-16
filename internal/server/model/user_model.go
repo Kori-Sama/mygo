@@ -2,6 +2,7 @@ package model
 
 import (
 	"mygo/internal/pkg/common"
+	"strconv"
 	"time"
 
 	log "github.com/sirupsen/logrus"
@@ -13,7 +14,7 @@ type User struct {
 	Password   string      `xorm:"varchar(32) notnull 'password'"`
 	Role       common.Role `xorm:"type:role 'role'"`
 	Age        int         `xorm:"int 'age'"`
-	Wallet     string      `xorm:"varchar 'wallet'"`
+	Wallet     int         `xorm:"varchar 'wallet'"`
 	Passphrase string      `xorm:"varchar 'passphrase'"`
 	CreatedAt  time.Time   `xorm:"created 'created_at'"`
 	UpdatedAt  time.Time   `xorm:"updated 'updated_at'"`
@@ -96,8 +97,12 @@ func (u *User) UpdatePassword(password string) error {
 }
 
 func (u *User) UpdateWallet(wallet string) error {
-	u.Wallet = wallet
-	_, err := engine.ID(u.ID).Cols("wallet").Update(u)
+	err := error(nil)
+	u.Wallet, err = strconv.Atoi(wallet)
+	if err != nil {
+		return common.ErrorOperateDatabase
+	}
+	_, err = engine.ID(u.ID).Cols("wallet").Update(u)
 	if err != nil {
 		return common.ErrorOperateDatabase
 	}
