@@ -18,6 +18,7 @@ type UserResponse struct {
 	Role      Role   `json:"role"`
 	CreatedAt int64  `json:"created_at"`
 	UpdatedAt int64  `json:"updated_at"`
+	Wallet    int    `json:"wallet"`
 }
 
 type HistoryResponse struct {

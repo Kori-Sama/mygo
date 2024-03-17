@@ -77,3 +77,9 @@ func GetTransferByReceiverId(receiverID int) ([]*Transfer, error) {
 	err := engine.Where("receiver_id = ?", receiverID).Find(&transfers)
 	return transfers, err
 }
+
+func GetAllTransfer() ([]*Transfer, error) {
+	transfers := make([]*Transfer, 0)
+	err := engine.Find(&transfers)
+	return transfers, err
+}

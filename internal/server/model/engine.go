@@ -35,7 +35,7 @@ func SyncTables() {
 		log.Warnf("Failed to init enum: %s", err)
 	}
 
-	err = engine.Sync2(new(User), new(Transaction), new(History))
+	err = engine.Sync2(new(User), new(Transaction), new(History), new(Transfer))
 	if err != nil {
 		log.Warnf("Failed to sync database: %s", err)
 	}

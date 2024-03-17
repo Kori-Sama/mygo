@@ -349,3 +349,33 @@ func CensorTransaction(ctx *gin.Context) {
 	}
 	ctx.JSON(common.OK, common.Ok(nil))
 }
+
+func MakeDeal(ctx *gin.Context) {
+	transactionIDStr := ctx.Param("id")
+	transactionID, err := strconv.Atoi(transactionIDStr)
+	if err != nil {
+		ctx.JSON(common.BAD_REQUEST, common.Bad(common.ErrorInvalidParam.Error()))
+		return
+	}
+
+	user := utils.GetLoginUser(ctx)
+	if user == nil {
+		ctx.JSON(common.UNAUTHORIZED, common.NoAuth(common.ErrorGetInfoFromToken.Error()))
+		return
+	}
+	if user.Role == common.RoleAdmin {
+		ctx.JSON(common.FORBIDDEN, common.Forbidden("Admins are not allowed to make deals"))
+		return
+	}
+
+	err = service.MakeDeal(user.ID, transactionID)
+	if err != nil {
+		if common.CheckInternalError(err) {
+			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
+			return
+		}
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
+		return
+	}
+	ctx.JSON(common.OK, common.Ok(nil))
+}

@@ -26,10 +26,12 @@ var (
 	ErrorBlockchainDisconnect = errors.New("blockchain is disconnected")
 	ErrorTokenContract        = errors.New("failed to get token contract")
 	// transfer error
-	ErrorSameID              = errors.New("sender id and receiver id are the same")
-	ErrorNegativeAmount      = errors.New("amount is negative")
-	ErrorInsufficientBalance = errors.New("insufficient balance")
-	ErrorWrongPassphrase     = errors.New("wrong passphrase")
+	ErrorSameID               = errors.New("sender id and receiver id are the same")
+	ErrorNegativeAmount       = errors.New("amount is negative")
+	ErrorInsufficientBalance  = errors.New("insufficient balance")
+	ErrorWrongPassphrase      = errors.New("wrong passphrase")
+	ErrorTransactionNotPassed = errors.New("transaction not passed")
+	ErrorInvalidTransaction   = errors.New("invalid transaction")
 )
 
 var internalErrors = []error{

@@ -6,7 +6,6 @@ import (
 	"mygo/internal/pkg/utils"
 	"mygo/internal/server/service"
 	"strconv"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -114,10 +113,22 @@ func GetAllUsers(ctx *gin.Context) {
 func GetUser(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 
-	id, err := strconv.Atoi(strings.TrimSpace(idStr))
-	if err != nil {
-		ctx.JSON(common.BAD_REQUEST, common.Bad(common.ErrorInvalidParam.Error()))
-		return
+	var id int
+	var err error
+
+	if idStr == "self" {
+		user := utils.GetLoginUser(ctx)
+		if user == nil {
+			ctx.JSON(common.UNAUTHORIZED, common.NoAuth(common.ErrorGetInfoFromToken.Error()))
+			return
+		}
+		id = user.ID
+	} else {
+		id, err = strconv.Atoi(idStr)
+		if err != nil {
+			ctx.JSON(common.BAD_REQUEST, common.Bad(common.ErrorInvalidParam.Error()))
+			return
+		}
 	}
 
 	user, err := service.GetUserById(id)

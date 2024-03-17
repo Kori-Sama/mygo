@@ -69,12 +69,14 @@ func main() {
 		t.POST("/publish", controller.PublishTransaction)
 		t.POST("/delete", controller.DeleteTransaction)
 		t.POST("/censor", controller.CensorTransaction)
+		t.POST("/deal/:id", controller.MakeDeal)
 	}
 
 	his := auth.Group("/history")
 	{
 		his.GET("/", controller.GetAllHistories)
 		his.GET("/query", controller.QueryHistory)
+		his.GET("/transfer", controller.GetAllTransfer)
 	}
 
 	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

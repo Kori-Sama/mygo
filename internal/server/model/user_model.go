@@ -28,6 +28,7 @@ func (u *User) ToResponse() *common.UserResponse {
 		Role:      u.Role,
 		CreatedAt: u.CreatedAt.Unix(),
 		UpdatedAt: u.UpdatedAt.Unix(),
+		Wallet:    u.Wallet,
 	}
 }
 
@@ -59,6 +60,7 @@ func GetUserById(id int) (*User, error) {
 	user := &User{}
 	isFind, err := engine.ID(id).Get(user)
 	if err != nil {
+		log.Error("GetUserById error: ", err)
 		return nil, common.ErrorOperateDatabase
 	}
 	if !isFind {

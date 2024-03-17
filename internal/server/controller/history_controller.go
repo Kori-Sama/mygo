@@ -9,6 +9,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetAllTransfer(ctx *gin.Context) {
+	transfers, err := service.GetAllTransfer()
+	if err != nil {
+		if common.CheckInternalError(err) {
+			ctx.JSON(common.INTERNAL_SERVER_ERROR, common.InternalError(err.Error()))
+			return
+		}
+		ctx.JSON(common.BAD_REQUEST, common.Bad(err.Error()))
+		return
+	}
+	ctx.JSON(common.OK, common.Ok(transfers))
+}
+
 func GetAllHistories(ctx *gin.Context) {
 	histories, err := service.GetAllHistory()
 	if err != nil {

@@ -3,7 +3,6 @@ package service
 import (
 	"mygo/internal/pkg/common"
 	"mygo/internal/server/model"
-	"strconv"
 )
 
 // func Transfer(senderID int, receiverID int, amount int) (*model.Transfer, error) {
@@ -49,33 +48,25 @@ import (
 // 	return newTranfer, nil
 // }
 
-func Transfer(senderName, passphrase, receiverName string, amount string) error {
-	sender, err := model.GetUserByName(senderName)
+func Transfer(senderID, receiverID int, amount int) error {
+	sender, err := model.GetUserById(senderID)
 	if err != nil {
 		return err
 	}
-	if sender.Passphrase != passphrase {
-		return common.ErrorWrongPassphrase
-	}
 
-	amountInt, err := strconv.Atoi(amount)
-	if err != nil {
-		return common.ErrorInvalidAmount
-	}
-
-	if sender.Wallet < amountInt {
+	if sender.Wallet < amount {
 		return common.ErrorInsufficientBalance
 	}
 
-	receiver, err := model.GetUserByName(receiverName)
+	receiver, err := model.GetUserById(receiverID)
 	if err != nil {
 		return err
 	}
 
-	sender.Wallet -= amountInt
-	receiver.Wallet += amountInt
+	sender.Wallet -= amount
+	receiver.Wallet += amount
 
-	_, err = model.CreateTransfer(sender, receiver, amountInt)
+	_, err = model.CreateTransfer(sender, receiver, amount)
 	if err != nil {
 		return err
 	}
@@ -108,6 +99,18 @@ func GetBalance(userID int) (int, error) {
 		return 0, err
 	}
 	return user.Wallet, nil
+}
+
+func GetAllTransfer() ([]*common.TransferHistoryResponse, error) {
+	transfers, err := model.GetAllTransfer()
+	if err != nil {
+		return nil, err
+	}
+	var transferResponses []*common.TransferHistoryResponse
+	for _, transfer := range transfers {
+		transferResponses = append(transferResponses, transfer.ToResponse())
+	}
+	return transferResponses, nil
 }
 
 func GetTransfersByID(transferID int) (*common.TransferHistoryResponse, error) {

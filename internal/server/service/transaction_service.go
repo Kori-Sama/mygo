@@ -65,6 +65,44 @@ func SearchTransactions(search string) ([]common.TransactionResponse, error) {
 	return res, nil
 }
 
+func MakeDeal(userID, transactionID int) error {
+	t, err := model.GetTransactionById(transactionID)
+	if err != nil {
+		return err
+	}
+
+	if t.Status != common.StatusPassed {
+		return common.ErrorTransactionNotPassed
+	}
+
+	u, err := model.GetUserById(t.UserID)
+	if err != nil {
+		return err
+	}
+	if u.Role == common.RoleOld {
+		err = Transfer(t.UserID, userID, t.Value)
+	} else if u.Role == common.RoleVolunteer {
+		err = Transfer(userID, t.UserID, t.Value)
+	} else {
+		err = common.ErrorInvalidTransaction
+	}
+
+	if err != nil {
+		return err
+	}
+
+	err = model.DeleteTransaction(transactionID)
+	if err != nil {
+		return err
+	}
+
+	err = CreateHistory(userID, transactionID, common.ActionDelete, "")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func GetTransaction(transactionID int) (*common.TransactionResponse, error) {
 	t, err := model.GetTransactionById(transactionID)
 	if err != nil {
