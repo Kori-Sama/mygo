@@ -25,4 +25,4 @@ go.work
 
 log/*.log
 
-build/*
+bin/*
