@@ -16,10 +16,11 @@ type config struct {
 }
 
 type serverConfig struct {
-	Port string   `yaml:"port"`
-	Mode string   `yaml:"mode"`
-	Salt string   `yaml:"salt"`
-	Dict []string `yaml:"dict"`
+	Port     string   `yaml:"port"`
+	GrpcPort string   `yaml:"grpcPort"`
+	Mode     string   `yaml:"mode"`
+	Salt     string   `yaml:"salt"`
+	Dict     []string `yaml:"dict"`
 }
 
 type databaseConfig struct {
@@ -85,4 +86,42 @@ func InitConfig() {
 	Blockchain = config.Blockchain
 	Jwt = config.JwtConfig
 	Log = config.LogConfig
+
+	fetchEnv()
+}
+
+func fetchEnv() {
+	port := os.Getenv("PORT")
+	if port != "" {
+		Server.Port = port
+	}
+	grpcPort := os.Getenv("GRPC_PORT")
+	if grpcPort != "" {
+		Server.GrpcPort = grpcPort
+	}
+
+	dbName := os.Getenv("DB_NAME")
+	if dbName != "" {
+		Database.DbName = dbName
+	}
+
+	dbHost := os.Getenv("DB_HOST")
+	if dbHost != "" {
+		Database.Host = dbHost
+	}
+
+	dbPort := os.Getenv("DB_PORT")
+	if dbPort != "" {
+		Database.Port = dbPort
+	}
+
+	dbUsername := os.Getenv("DB_USER")
+	if dbUsername != "" {
+		Database.Username = dbUsername
+	}
+
+	dbPassword := os.Getenv("DB_PASSWORD")
+	if dbPassword != "" {
+		Database.Password = dbPassword
+	}
 }

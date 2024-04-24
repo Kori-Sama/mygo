@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      PORT: 80
+      GRPC_PORT: 50051
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: kori
+      DB_PASSWORD: 123456
+      DB_NAME: mygo
+    ports:
+      - 8080:80
+      - 50051:50051
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: kori 
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: mygo
+    ports:
+      - 5432:5432
+    volumes:
+      - /home/kori/code/go/mygo/postgres:/var/lib/postgresql/data
+  

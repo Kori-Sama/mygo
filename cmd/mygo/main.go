@@ -3,6 +3,7 @@ package main
 import (
 	"mygo/config"
 	_ "mygo/docs"
+	"mygo/internal/grpc"
 	"mygo/internal/server/controller"
 	"mygo/internal/server/middlewares"
 	"mygo/internal/server/model"
@@ -29,6 +30,8 @@ func main() {
 
 	model.InitEngine()
 	model.SyncTables()
+
+	go grpc.Run()
 
 	service.Seg.LoadDict(strings.Join(config.Server.Dict, ","))
 
