@@ -1,7 +1,18 @@
 version: '3.9'
 
 services:
-  server:
+  postgres:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: kori 
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: mygo
+    ports:
+      - 5432:5432
+    volumes:
+      - /home/kori/code/go/mygo/postgres:/var/lib/postgresql/data
+      
+  main-server:
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,15 +29,25 @@ services:
       - 50051:50051
     depends_on:
       - postgres
-
-  postgres:
-    image: postgres:alpine
-    environment:
-      POSTGRES_USER: kori 
-      POSTGRES_PASSWORD: 123456
-      POSTGRES_DB: mygo
-    ports:
-      - 5432:5432
-    volumes:
-      - /home/kori/code/go/mygo/postgres:/var/lib/postgresql/data
   
+  management-server:
+    build:
+      context: /home/kori/code/cpp/mygo-management
+      dockerfile: Dockerfile
+    environment:
+      PORT: 80 
+      GRPC_IP: main-server
+      GRPC_PORT: 50051
+      THREAD_POOL_SIZE: 4
+    ports:
+      - 9090:80
+
+  management-gui:
+    build:
+      context: /home/kori/code/js/mygo-gui-management
+      dockerfile: Dockerfile
+    environment:
+      VITE_MAIN_SERVER_URL: http://main-server:8080
+      VITE_ADMIN_SERVER_URL: http://management-server:9090
+    ports:
+      - 3000:80

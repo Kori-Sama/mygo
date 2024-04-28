@@ -7,6 +7,7 @@ import (
 	"mygo/internal/pkg/common"
 	"mygo/internal/server/model"
 
+	log "github.com/sirupsen/logrus"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -28,6 +29,8 @@ func (s *transactionService) GetAllTransactions(
 		})
 	}
 
+	log.Infof("[GRPC] >> Get all transactions, request from %s\n", stream.Context().Value("user"))
+
 	return nil
 }
 
@@ -42,9 +45,6 @@ func (s *transactionService) HandleTransaction(ctx context.Context, req *pb.Tran
 
 	switch action {
 	case pb.TransactionRequest_GET:
-		return &pb.TransactionResponse{
-			Transaction: newTransactionMessage(t),
-		}, nil
 	case pb.TransactionRequest_PASS:
 		t.Status = common.StatusPassed
 		t.Update()
@@ -57,7 +57,9 @@ func (s *transactionService) HandleTransaction(ctx context.Context, req *pb.Tran
 		return nil, errors.New("invalid action")
 	}
 
-	return nil, nil
+	return &pb.TransactionResponse{
+		Transaction: newTransactionMessage(t),
+	}, nil
 }
 
 var statusMap = map[common.Status]pb.TransactionMessage_Status{
